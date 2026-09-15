@@ -3,7 +3,7 @@
 import React, { CSSProperties, useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
-import { Flex, Skeleton } from "@/once-ui/components";
+import { Flex, Skeleton, Spinner } from "@/once-ui/components";
 
 export interface SmartImageProps extends React.ComponentProps<typeof Flex> {
   aspectRatio?: string;
@@ -42,7 +42,9 @@ const SmartImage: React.FC<SmartImageProps> = ({
 
     // Only start loading/playing video sources once they're actually
     // near the viewport, instead of every video on the page fetching
-    // and autoplaying immediately on load.
+    // and autoplaying immediately on load. The generous 600px margin
+    // means videos further down the page have already started loading
+    // by the time the user actually scrolls to them.
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
@@ -50,7 +52,7 @@ const SmartImage: React.FC<SmartImageProps> = ({
           observer.disconnect();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "600px" }
     );
 
     observer.observe(node);
@@ -171,31 +173,12 @@ const SmartImage: React.FC<SmartImageProps> = ({
         {!isLoading && isYouTube && (
           <>
             {/*
-              The thumbnail stays mounted underneath the iframe at all times
-              (instead of being swapped out for it) and only fades away once
-              the iframe reports it has actually loaded. YouTube's embed
-              renders a solid black frame for a beat while its own player JS
-              boots up — without this, that black frame is the last thing
-              painted and reads as "stuck loading". With the thumbnail
-              underneath, viewers see the real preview image the whole time
-              and the video simply fades in on top once it's genuinely ready.
+              No thumbnail here by design — instead we mount the iframe as
+              soon as it's near the viewport and show a spinner over a dark
+              placeholder until it reports onLoad. This avoids ever painting
+              a stray thumbnail frame and keeps the perceived wait to "it's
+              visibly loading" rather than "it's stuck".
             */}
-            {youtubeId && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={`https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`}
-                alt={alt || "YouTube video thumbnail"}
-                loading={priority ? "eager" : "lazy"}
-                fetchPriority={priority ? "high" : "auto"}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-            )}
             {isInView && (
               <iframe
                 title={alt || "YouTube video demo"}
@@ -225,35 +208,13 @@ const SmartImage: React.FC<SmartImageProps> = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "rgba(0,0,0,0.25)",
+                background: "var(--neutral-alpha-weak, rgba(0,0,0,0.35))",
                 opacity: iframeLoaded ? 0 : 1,
                 transition: "opacity 0.3s ease",
                 pointerEvents: "none",
               }}
             >
-              <div
-                style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "50%",
-                  background: "rgba(0,0,0,0.55)",
-                  border: "1px solid rgba(255,255,255,0.35)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: 0,
-                    height: 0,
-                    marginLeft: "4px",
-                    borderTop: "10px solid transparent",
-                    borderBottom: "10px solid transparent",
-                    borderLeft: "16px solid white",
-                  }}
-                />
-              </div>
+              <Spinner size="l" ariaLabel="Loading video" />
             </div>
           </>
         )}
