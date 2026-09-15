@@ -1,0 +1,360 @@
+@keyframes portraitFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hero {
+  width: 100%;
+  max-width: 1160px;
+  max-height: none;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: calc(100vh - 160px);
+
+  padding: 24px 32px 0 32px;
+
+  overflow-x: hidden;
+}
+
+.heroRow {
+  width: 100%;
+  max-width: 1270px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.heroCopy {
+  width: 100%;
+  max-width: 720px;
+  min-width: 0;
+  flex: 1 1 440px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+  justify-content: center;
+
+  text-align: left;
+
+  gap: 12px;
+
+  p {
+    text-align: left;
+    max-width: 600px;
+    margin: 0;
+    line-height: 1.55;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.heroPortrait {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  margin-bottom: 32px;
+}
+
+/* squared frame with soft rounded corners for the portrait */
+
+.portraitShape {
+  position: relative;
+  display: grid;
+  place-items: center;
+
+  width: clamp(300px, 32vw, 500px);
+  aspect-ratio: 0.691;
+
+  transform: translateX(0);
+
+  transition: transform 0.4s ease, filter 0.4s ease;
+  animation: portraitFloat 6s ease-in-out infinite;
+
+  /* soft cyan/violet dual-tone aura behind the subject */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4%;
+    z-index: -1;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--brand-solid-strong) 22%, transparent) 0%,
+      color-mix(in srgb, var(--accent-solid-strong) 14%, transparent) 55%,
+      transparent 75%
+    );
+    filter: blur(28px);
+    opacity: 0.6;
+  }
+
+  &:hover {
+    transform: translateY(-4px) scale(1.015);
+    filter: brightness(1.05);
+    animation-play-state: paused;
+  }
+
+  > *:first-child {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portraitShape {
+    animation: none;
+  }
+}
+
+.portraitCorner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--brand-solid-strong);
+  opacity: 0.85;
+}
+
+.portraitCorner[data-corner="tl"] {
+  top: -10px;
+  left: -10px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.portraitCorner[data-corner="br"] {
+  bottom: -10px;
+  right: -10px;
+  border-left: none;
+  border-top: none;
+}
+
+.ctaGrid {
+  width: 100%;
+  max-width: 540px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  position: relative;
+  /* Sits above the hero portrait's decorative aura/glow so nothing can
+     ever visually (or interactively) overlap the buttons underneath. */
+  z-index: 5;
+}
+
+/*
+  Plain, self-contained button styling — deliberately not routed through
+  the once-ui Button/ElementType/Arrow abstraction chain. These are
+  simple <Link>/<a> elements with their own CSS below, so there's no
+  ambiguity about what's rendered or what could intercept a click.
+*/
+.ctaButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: var(--radius-full, 999px);
+  font-size: var(--font-size-body-m);
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease,
+    background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.ctaAvatar {
+  flex-shrink: 0;
+}
+
+.ctaArrow {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.ctaPrimary {
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+  color: #ffffff;
+  border-color: transparent;
+
+  &:hover {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    box-shadow: 0 14px 30px -16px rgba(8, 145, 178, 0.55);
+  }
+}
+
+.ctaSecondary {
+  background: transparent;
+  color: var(--neutral-on-background-strong);
+  border-color: var(--neutral-alpha-medium);
+
+  &:hover {
+    border-color: var(--brand-alpha-strong);
+    box-shadow: 0 14px 30px -16px color-mix(in srgb, var(--brand-solid-strong) 35%, transparent);
+  }
+}
+
+.ctaTertiary {
+  background: transparent;
+  color: var(--neutral-on-background-strong);
+  border-color: var(--neutral-alpha-medium);
+
+  &:hover {
+    background: var(--neutral-alpha-weak);
+    border-color: var(--neutral-alpha-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctaButton {
+    transition: none;
+  }
+}
+
+.stats {
+  padding-top: 16px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 16px;
+
+  width: 100%;
+
+  div {
+    min-width: 120px;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--neutral-alpha-weak);
+    border-radius: 8px;
+
+    background: transparent;
+
+    text-align: center;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      border-color: var(--brand-alpha-strong);
+      box-shadow: 0 16px 32px -20px color-mix(in srgb, var(--brand-solid-strong) 45%, transparent);
+    }
+  }
+
+  strong,
+  span {
+    display: block;
+  }
+
+  strong {
+    color: var(--neutral-on-background-strong);
+    font-size: var(--font-size-heading-s);
+  }
+
+  span {
+    color: var(--neutral-on-background-weak);
+    font-size: var(--font-size-body-xs);
+  }
+}
+
+@media (max-width: 1100px) {
+  .heroRow {
+    gap: 40px;
+  }
+
+  .portraitShape {
+    width: clamp(220px, 26vw, 300px);
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: auto;
+    padding-top: 72px;
+  }
+
+  .heroRow {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .heroCopy {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+
+    p {
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+
+  .heroCopy > div {
+    justify-content: center !important;
+  }
+
+  .portraitShape {
+    transform: translateX(0);
+  }
+
+  .ctaGrid {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .stats div {
+    min-width: 0;
+    text-align: center;
+  }
+}

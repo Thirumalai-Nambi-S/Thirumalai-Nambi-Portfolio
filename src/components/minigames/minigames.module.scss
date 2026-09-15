@@ -1,0 +1,143 @@
+/* ── Section wrapper ── */
+.sectionWrapper {
+  width: 100%;
+  padding-top: 8px;
+}
+
+/* ── Separator ── */
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 36px;
+}
+
+.separatorLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--brand-solid-strong) 40%, var(--neutral-alpha-medium)),
+    transparent
+  );
+}
+
+.separatorLabel {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--brand-solid-strong) 35%, var(--neutral-alpha-medium));
+  background: color-mix(in srgb, var(--brand-solid-strong) 10%, var(--neutral-alpha-weak));
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--brand-solid-strong) 80%, var(--neutral-on-background-weak));
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px -6px color-mix(in srgb, var(--brand-solid-strong) 30%, transparent);
+  white-space: nowrap;
+}
+
+.tabRow {
+  width: 100%;
+  max-width: 720px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.tab {
+  --tab-accent: #22d3ee;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--neutral-alpha-medium);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--tab-accent) 55%, var(--neutral-alpha-medium));
+  }
+}
+
+.tabActive {
+  border-color: var(--tab-accent);
+  background: color-mix(in srgb, var(--tab-accent) 15%, transparent);
+  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--tab-accent) 55%, transparent);
+}
+
+.tabIcon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--tab-accent) 18%, transparent);
+  font-size: 18px;
+}
+
+.tabText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tabLabel {
+  font-size: var(--font-size-body-s);
+  font-weight: 700;
+  color: var(--neutral-on-background-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabDescription {
+  font-size: 11px;
+  color: var(--neutral-on-background-weak);
+}
+
+.gameFrame {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  animation: panelIn 0.3s ease;
+}
+
+.gameBody {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 620px) {
+  .tabRow {
+    grid-template-columns: 1fr;
+  }
+
+  .gameBody {
+    padding: 10px;
+  }
+}

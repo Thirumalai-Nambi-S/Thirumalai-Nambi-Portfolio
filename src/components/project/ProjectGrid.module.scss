@@ -1,0 +1,303 @@
+/* ---------- Row list (alternating video / details) ---------- */
+.list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+
+  /* Scroll-reveal: starts faded out and offset to one side, settles
+     into place once .rowVisible is applied by the IntersectionObserver
+     hook. Reversed rows slide in from the opposite direction so the
+     zigzag reads as intentional rather than a random pop-in. */
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rowReversed {
+  transform: translateX(32px);
+}
+
+.rowVisible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rowReversed .media {
+  order: 2;
+}
+
+.rowReversed .body {
+  order: 1;
+}
+
+/* ---------- Media (video/screenshot) side ---------- */
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--neutral-alpha-medium);
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease,
+    border-color 0.35s ease;
+
+  :global(img),
+  :global(video) {
+    transition: transform 0.6s ease;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--row-accent, var(--brand-solid-strong)) 55%, var(--neutral-alpha-medium));
+    box-shadow: 0 28px 60px -30px color-mix(in srgb, var(--row-accent, var(--brand-solid-strong)) 55%, transparent);
+    outline: none;
+  }
+
+  &:hover .mediaOverlay,
+  &:focus-visible .mediaOverlay {
+    opacity: 1;
+  }
+
+  &:hover :global(img),
+  &:hover :global(video) {
+    transform: scale(1.06);
+  }
+}
+
+.mediaOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 12px;
+  background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--page-background) 75%, transparent) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.expandBadge {
+  padding: 6px 12px;
+  border-radius: var(--radius-full, 999px);
+  background: var(--row-accent, var(--brand-solid-strong));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+/* ---------- Details side ---------- */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.owner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bodyFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* ---------- Modal ---------- */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--page-background) 82%, transparent);
+  backdrop-filter: blur(6px);
+  overflow-y: auto;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  max-height: none;
+  margin: auto;
+  overflow: visible;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--brand-alpha-strong);
+  background: var(--surface-background);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.6);
+  animation: zoomIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--neutral-alpha-medium);
+  background: color-mix(in srgb, var(--page-background) 70%, transparent);
+  color: var(--neutral-on-background-strong);
+  cursor: pointer;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    transform: rotate(90deg);
+    background: var(--danger-alpha-medium, var(--neutral-alpha-strong));
+  }
+}
+
+.modalMedia {
+  width: 100%;
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  overflow: hidden;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 28px 32px;
+}
+
+/* Extra detail block, deliberately placed near the bottom of the modal
+   body (after the summary/stack, before the link row) so the top of
+   the modal stays a fast summary and this reads as "more on request". */
+.modalDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: var(--radius-m);
+  background: transparent;
+  border: 1px solid var(--neutral-alpha-medium);
+}
+
+.modalDetailsLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.highlightList {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    font-size: var(--font-size-body-s);
+    color: var(--neutral-on-background-medium);
+  }
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--neutral-alpha-weak);
+  margin-top: 8px;
+}
+
+.caseStudyLink {
+  color: var(--brand-on-background-strong);
+  font-weight: 600;
+  font-size: var(--font-size-body-s);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .list {
+    gap: 40px;
+  }
+
+  .row,
+  .rowReversed {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    transform: translateY(24px);
+  }
+
+  .rowVisible {
+    transform: translateY(0);
+  }
+
+  .rowReversed .media,
+  .rowReversed .body {
+    order: initial;
+  }
+
+  .modalBody {
+    padding: 18px 18px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .rowReversed {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,53 @@
+---
+title: "Prepzi AI — Free AI Mock Interview Platform"
+publishedAt: "2026-07-01"
+summary: "An AI-driven mock interview platform where candidates practice aptitude, technical, and HR interview rounds for free, with instant AI-generated feedback on their answers."
+images:
+  - "https://youtu.be/M0bxWjAE0Dg"
+team:
+  - name: "Thirumalai Nambi S"
+    role: "Full-Stack Developer & AI Integration"
+    avatar: "/images/Nambi.jpg"
+    linkedIn: "https://www.linkedin.com/in/thirumalai-nambi-s-a9b078339/"
+link: "https://prepzi-ai.vercel.app"
+github: "https://github.com/Thirumalai-Nambi-S/Prepzi-AI"
+docs: "https://github.com/Thirumalai-Nambi-S/Prepzi-AI#readme"
+linkedin: "https://www.linkedin.com/in/thirumalai-nambi-s-a9b078339/"
+stack: ["TypeScript", "Next.js", "AI Agents", "Tailwind CSS"]
+highlights:
+  - "Three Interview Tracks"
+  - "AI-Generated Feedback"
+  - "Adaptive Question Flow"
+  - "Fully Free Access"
+---
+
+## Overview
+
+Prepzi AI is a mock interview platform built to give students and job seekers unlimited, judgment-free interview practice. Users can attempt aptitude tests, technical rounds, and HR/behavioral interviews, and receive instant, structured AI feedback — all for free.
+
+## Problem Statement
+
+Access to realistic interview practice is uneven: mock interviews with real people are hard to schedule and often cost money, and generic question banks don't give feedback. Prepzi AI closes that gap with an always-available AI interviewer that adapts questions to the chosen track and scores responses on clarity, correctness, and structure.
+
+## Key Features
+
+- **Three Interview Tracks** — Aptitude (quantitative + logical reasoning), Technical (role/stack-specific coding & concept questions), and HR (behavioral, STAR-method style questions).
+- **AI-Generated Feedback** — Every answer is scored with actionable feedback on structure, relevance, and areas to improve, instead of a flat right/wrong verdict.
+- **Adaptive Question Flow** — Question difficulty adjusts based on prior answers within a session, keeping the practice session appropriately challenging.
+- **Session History** — Past attempts and scores are saved so users can track improvement over time.
+- **Fully Free Access** — No paywalled question sets or "pro tier" gating — the platform is intentionally free to use.
+
+## Technologies Used
+
+- **Next.js & TypeScript** for the application shell, routing, and type-safe API layer
+- **Tailwind CSS** for a fast, consistent, responsive UI
+- **AI Agent Orchestration** for question generation and response evaluation
+- **Vercel** for deployment and edge delivery
+
+## Challenges and Learnings
+
+Designing prompts that consistently produce fair, well-calibrated feedback across very different question types (a logic puzzle vs. a "tell me about a conflict you resolved" HR question) required separate evaluation prompts per track rather than one generic scoring prompt. Keeping response latency low while still generating structured feedback pushed me to stream partial results to the UI instead of waiting for the full response.
+
+## Outcome
+
+Prepzi AI gives users a low-friction way to rehearse real interview conditions and get concrete feedback instead of silence. The modular track system makes it straightforward to add new interview types (e.g., system design, case interviews) as the platform grows.

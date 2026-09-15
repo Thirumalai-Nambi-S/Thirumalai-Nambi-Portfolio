@@ -1,0 +1,74 @@
+/*
+  Shared section wrapper — fully transparent at rest so it blends
+  completely into the page background (no visible box/silhouette),
+  with each `data-accent` value only surfacing as a soft glow on
+  hover, so sections stay colorful/interactive without ever showing
+  a static rectangle behind the content.
+*/
+
+.panel {
+  width: 100%;
+  border-radius: var(--radius-l);
+  overflow: visible;
+  position: relative;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  &:hover {
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.panelDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neutral-alpha-strong);
+
+  &:nth-child(1) {
+    background: #ff5f57;
+  }
+  &:nth-child(2) {
+    background: #febc2e;
+  }
+  &:nth-child(3) {
+    background: #28c840;
+  }
+}
+
+.panelTitle {
+  margin-left: 8px;
+  font-size: var(--font-size-body-s);
+  font-weight: 600;
+  color: var(--neutral-on-background-strong);
+}
+
+.panelBody {
+  padding: 28px;
+}
+
+.panelBodyFlush {
+  padding: 0;
+}
+
+@media (max-width: 560px) {
+  .panelBody {
+    padding: 18px;
+  }
+}

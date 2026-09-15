@@ -1,0 +1,78 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tile {
+  --tile-color: #67e8f9;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 96px;
+  padding: 14px 8px 12px;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--neutral-alpha-weak);
+  background: transparent;
+
+  /* Hidden until the grid's shared IntersectionObserver fires, then
+     pops in with a per-tile stagger (transition-delay set inline). */
+  opacity: 0;
+  transform: translateY(14px) scale(0.92);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease,
+    box-shadow 0.25s ease, background 0.25s ease;
+}
+
+/* Placed before `:hover` below so, on equal specificity, the hover
+   rule wins the cascade once a tile has been revealed — otherwise
+   resetting the transform here would cancel the hover lift. */
+.revealed .tile {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--tile-color) 55%, var(--neutral-alpha-medium));
+  background: color-mix(in srgb, var(--tile-color) 8%, var(--neutral-alpha-weak));
+  box-shadow: 0 12px 28px -14px color-mix(in srgb, var(--tile-color) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.iconBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--tile-color) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tile-color) 30%, transparent);
+}
+
+.label {
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .tile {
+    width: 84px;
+    padding: 12px 6px 10px;
+  }
+
+  .iconBadge {
+    width: 38px;
+    height: 38px;
+  }
+}

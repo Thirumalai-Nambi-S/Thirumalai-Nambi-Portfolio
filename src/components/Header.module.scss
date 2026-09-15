@@ -1,0 +1,63 @@
+.position {
+    position: sticky;
+    top: 0;
+}
+
+/* Three-column header: side columns flex, the nav pill always takes
+   only the width it actually needs so it never gets squeezed into a
+   scrolling strip. */
+.headerGrid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    max-width: 1600px;
+    gap: 8px;
+}
+
+.navScroll {
+    /* Static, non-scrolling pill: wide enough on any normal desktop
+       viewport to lay out every route icon + label in one row. */
+    max-width: calc(100vw - 32px);
+    width: max-content;
+    overflow: visible;
+}
+
+.mask {
+    pointer-events: none;
+    backdrop-filter: blur(0.5rem);
+    background: linear-gradient(to bottom, var(--page-background), var(--static-transparent));
+    mask-image: linear-gradient(rgba(0,0,0) 25%, rgba(0, 0, 0, 0) 100%);
+    mask-size: 100% 100%;
+}
+
+@media (--s) {
+    .position {
+        top: auto;
+        position: fixed;
+        bottom: var(--static-space-24);
+    }
+
+    .headerGrid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Only the small mobile bottom-bar keeps a scroll fallback, since
+       route labels + icons genuinely don't fit a phone screen at once. */
+    .navScroll {
+        max-width: calc(100vw - 16px);
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .mask {
+        transform: rotate(180deg);
+        bottom: 0;
+    }
+}

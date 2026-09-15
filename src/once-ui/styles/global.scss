@@ -1,0 +1,233 @@
+/* BOX-SIZING */
+* {
+    box-sizing: border-box;
+}
+
+/* PREVENT HORIZONTAL SCROLL EVERYWHERE */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Keep the page scrollable, but never show a visible scrollbar track. */
+html,
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+*,
+*::before,
+*::after {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+
+
+
+
+
+main,
+section {
+  width: 100%;
+  max-width: 100%;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+[data-page] {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+
+
+
+
+
+ul {
+    margin: 0;
+    padding: 0 0 0 var(--static-space-12);
+}
+
+li {
+    padding: 0;
+    line-height: 175%;
+    font-size: inherit;
+    color: inherit;
+    margin-bottom: var(--static-space-12);
+    padding-left: var(--static-space-8);
+
+    &::marker {
+        color: var(--brand-on-background-weak);
+    }
+}
+
+img {
+    user-select: none;
+}
+
+/* SELECTION */
+::selection {
+    background: var(--accent-solid-medium);
+    color: var(--accent-on-solid-strong, var(--neutral-background-strong));
+}
+
+/* Smooth in-page scrolling (e.g. table-of-contents jumps), switched off
+   for anyone who's asked for reduced motion. */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ---------- Transparent surface mode across all states ----------
+   Ensure that card/panel/div section layers blend completely into the
+   portfolio background without showing any translucent box layer or border. */
+:root,
+html,
+body,
+[data-surface],
+[data-app-surface] {
+    --surface-background: transparent !important;
+    --surface-border: transparent !important;
+    --backdrop-filter: none !important;
+}
+
+html[data-app-surface="transparent"],
+html[data-app-surface="translucent"],
+html[data-app-surface="opaque"] {
+    --surface-background: transparent !important;
+    --surface-border: transparent !important;
+    --backdrop-filter: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* ---------- Shared motion keyframes ---------- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes floatY {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animated two-tone gradient text — cyan (brand) flowing into violet
+   (accent), used to call out a key phrase in a heading. Apply with
+   className="gradient-text". */
+.gradient-text {
+    background: linear-gradient(
+        100deg,
+        var(--brand-solid-strong) 0%,
+        var(--accent-solid-strong) 50%,
+        var(--brand-solid-strong) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientFlow 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gradient-text {
+        animation: none;
+        background-position: 0% 50%;
+    }
+}
+
+/* LINK */
+a:not(.button) {
+    color: var(--brand-on-background-medium);
+    text-decoration: none;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    text-decoration-color: var(--neutral-border-strong) !important;
+
+    &:hover {
+        text-decoration-line: underline;
+    }
+}
+
+/* SCROLLBAR — hidden everywhere, scrolling stays fully functional */
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: var(--static-transparent);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--static-transparent);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--static-transparent);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--static-transparent);
+}

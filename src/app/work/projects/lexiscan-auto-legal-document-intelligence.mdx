@@ -1,0 +1,54 @@
+---
+title: "LexiScan Auto — OCR & NER Powered Legal Document Automation"
+publishedAt: "2025-05-20"
+summary: "A full-stack pipeline that scans, OCRs, and extracts structured clauses and entities from legal PDFs using spaCy NER and an optional fine-tuned BERT model, served through a FastAPI backend and a React dashboard."
+images:
+  - "https://youtu.be/5XZYDE6z5k4"
+team:
+  - name: "Thirumalai Nambi S"
+    role: "Data Analyst & ML Engineer"
+    avatar: "/images/Nambi.jpg"
+    linkedIn: "https://www.linkedin.com/in/thirumalai-nambi-s-a9b078339/"
+link: "https://github.com/Thirumalai-Nambi-S/LexiScan-Auto"
+github: "https://github.com/Thirumalai-Nambi-S/LexiScan-Auto"
+docs: "https://github.com/Thirumalai-Nambi-S/LexiScan-Auto#readme"
+linkedin: "https://www.linkedin.com/in/thirumalai-nambi-s-a9b078339/"
+stack: ["Python", "FastAPI", "spaCy", "Tesseract OCR", "BERT", "React", "Vite", "Tailwind"]
+highlights:
+  - "PDF Ingestion & OCR"
+  - "Clause & Entity Extraction"
+  - "Optional BERT Fine-Tuning"
+  - "Schema-Validated Output"
+---
+
+## Overview
+
+LexiScan Auto automates one of the most tedious parts of legal operations: reading through scanned contracts and manually tagging clauses, parties, dates, and obligations. The system ingests scanned or digital PDFs, runs OCR where needed, and uses a Named Entity Recognition pipeline to surface structured, searchable data from unstructured legal text.
+
+## Problem Statement
+
+Legal teams routinely deal with hundreds of scanned contracts that are not machine-readable. Manual review is slow, inconsistent, and expensive to scale. LexiScan Auto was built to turn a stack of scanned PDFs into structured, queryable clause-level data in minutes instead of hours.
+
+## Key Features
+
+- **PDF Ingestion & OCR** — Uses `pdfplumber` and `pdf2image` for digital PDFs and `pytesseract` + OpenCV preprocessing for scanned documents, with automatic routing between the two paths.
+- **Clause & Entity Extraction** — A spaCy NER pipeline trained on synthetic legal data (generated with Faker) tags parties, dates, monetary values, and obligation clauses.
+- **Optional BERT Fine-Tuning** — A secondary, heavier pipeline (Transformers + PyTorch + Datasets) fine-tunes a BERT-based token classifier for higher-precision entity extraction on ambiguous clauses.
+- **Schema-Validated Output** — Extracted data is validated against Pydantic schemas before being returned, ensuring the frontend always receives a predictable JSON contract.
+- **React Dashboard** — A Vite + React + Tailwind frontend lets reviewers upload documents, watch OCR/NER progress, and browse extracted entities per document.
+
+## Technologies Used
+
+- **Backend**: FastAPI, Uvicorn, Pydantic, python-dotenv
+- **OCR & PDF**: pdfplumber, pdf2image, pytesseract, Pillow, OpenCV
+- **NLP**: spaCy (en_core_web_sm), Faker for synthetic training data, seqeval for evaluation
+- **Optional ML**: Transformers, Datasets, Accelerate, scikit-learn, NumPy
+- **Frontend**: React, Vite, TailwindCSS
+
+## Challenges and Learnings
+
+Scanned legal documents vary wildly in scan quality, so a single OCR configuration wasn't reliable — I added an image preprocessing step (denoising, deskewing, contrast normalization) before OCR, which materially improved text extraction accuracy. Balancing the lightweight spaCy pipeline against the heavier BERT fine-tuning path also required designing the API so the BERT model is optional and only loaded when higher precision is explicitly requested, keeping default response times fast.
+
+## Outcome
+
+LexiScan Auto reliably converts scanned legal PDFs into structured entity data, cutting manual clause-tagging time significantly for a representative sample of contracts. The modular pipeline (OCR → NER → validation → API) makes it straightforward to swap in a domain-specific model as more labeled data becomes available.

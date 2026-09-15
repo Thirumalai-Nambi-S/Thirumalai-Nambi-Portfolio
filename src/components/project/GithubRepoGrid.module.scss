@@ -1,0 +1,130 @@
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gridRevealed {
+  /* parent class toggled by useInView — children transition in */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--neutral-alpha-weak);
+  background: transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease,
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--card-delay, 0s);
+
+  /* Hidden until the grid scrolls into view */
+  opacity: 0;
+  transform: translateY(36px) scale(0.95);
+
+  .gridRevealed & {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--card-delay, 0s),
+      opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) var(--card-delay, 0s),
+      border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand-alpha-strong);
+    box-shadow: 0 20px 40px -26px color-mix(in srgb, var(--brand-solid-strong) 60%, transparent);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repoName {
+  font-weight: 600;
+  font-size: var(--font-size-body-m);
+  color: var(--brand-on-background-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repoDescription {
+  margin: 0;
+  font-size: var(--font-size-body-s);
+  color: var(--neutral-on-background-weak);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(var(--font-size-body-s) * 1.5 * 2);
+}
+
+.cardFooter {
+  margin-top: auto;
+  padding-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--neutral-on-background-weak);
+}
+
+.language {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.languageDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.updated {
+  margin-left: auto;
+}
+
+.viewAll {
+  color: var(--brand-on-background-strong);
+  font-weight: 600;
+  font-size: var(--font-size-body-s);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .updated {
+    margin-left: 0;
+  }
+}

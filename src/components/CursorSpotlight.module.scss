@@ -1,0 +1,130 @@
+.wrapper {
+  position: fixed;
+  inset: 0;
+  /* Sits above the base page background (z-index 0) but below all real
+     page content and the footer (z-index 2), the sticky header
+     (z-index 9), and the project modal (z-index 1000) — so it glows
+     behind text/images/cards, not over them. */
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Large, heavily-blurred halo — the wide "trail" of the spotlight.
+   Color comes from --user-cursor-rgb (set by the theme customizer),
+   falling back to the original cyan if it hasn't been set yet. */
+.glowOuter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1600px;
+  height: 1600px;
+  margin-left: -750px;
+  margin-top: -750px;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: opacity 0.6s ease, border-radius 0.4s ease;
+  will-change: transform;
+  background: radial-gradient(
+    circle,
+    rgba(var(--user-cursor-rgb, 56, 224, 255), 0.5) 5%,
+    rgba(var(--user-cursor-rgb, 34, 211, 238), 0.28) 24%,
+    rgba(var(--user-cursor-rgb, 20, 160, 200), 0.14) 45%,
+    rgba(var(--user-cursor-rgb, 10, 90, 130), 0.05) 62%,
+    transparent 75%
+  );
+  filter: blur(14px);
+}
+
+/* ---------- Shape variants (set via data-cursor-shape on <html>) ----------
+   `rotate` is used as its own independent CSS property (not folded into
+   `transform`) specifically so it doesn't clash with the `transform:
+   translate3d(...)` the component sets inline every frame for position. */
+:global(html[data-cursor-shape="square"]) .glowOuter {
+  border-radius: 18%;
+}
+
+:global(html[data-cursor-shape="diamond"]) .glowOuter {
+  border-radius: 18%;
+  rotate: 45deg;
+}
+
+:global(html[data-cursor-shape="ring"]) .glowOuter {
+  background: radial-gradient(
+    circle,
+    transparent 0%,
+    transparent 28%,
+    rgba(var(--user-cursor-rgb, 56, 224, 255), 0.55) 36%,
+    rgba(var(--user-cursor-rgb, 34, 211, 238), 0.22) 46%,
+    transparent 62%
+  );
+}
+
+/* ---------- Size variants (set via data-cursor-size on <html>) ---------- */
+:global(html[data-cursor-size="small"]) .glowOuter {
+  width: 1000px;
+  height: 1000px;
+  margin-left: -500px;
+  margin-top: -500px;
+}
+
+:global(html[data-cursor-size="large"]) .glowOuter {
+  width: 2100px;
+  height: 2100px;
+  margin-left: -1050px;
+  margin-top: -1050px;
+}
+
+/* Smaller, brighter core that trails a touch faster than the outer
+   halo, so the light reads as having a defined center. */
+// .glowInner {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 360px;
+//   height: 360px;
+//   margin-left: -180px;
+//   margin-top: -180px;
+//   border-radius: 50%;
+//   opacity: 0.9;
+//   transition: opacity 0.6s ease;
+//   will-change: transform;
+//   background: radial-gradient(
+//     circle,
+//     rgba(190, 250, 255, 0.75) 0%,
+//     rgba(103, 232, 249, 0.4) 40%,
+//     rgba(34, 211, 238, 0.16) 75%,
+//     transparent 72%
+//   );
+//   filter: blur(6px);
+// }
+
+@media (max-width: 760px) {
+  .glowOuter {
+    width: 820px;
+    height: 820px;
+    margin-left: -410px;
+    margin-top: -410px;
+  }
+
+  :global(html[data-cursor-size="small"]) .glowOuter {
+    width: 540px;
+    height: 540px;
+    margin-left: -270px;
+    margin-top: -270px;
+  }
+
+  :global(html[data-cursor-size="large"]) .glowOuter {
+    width: 1100px;
+    height: 1100px;
+    margin-left: -550px;
+    margin-top: -550px;
+  }
+
+  // .glowInner {
+  //   width: 360px;
+  //   height: 360px;
+  //   margin-left: -180px;
+  //   margin-top: -180px;
+  // }
+}

@@ -1,0 +1,324 @@
+.loadingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+      circle at 50% 50%,
+      rgba(15, 23, 42, 0.95) 0%,
+      #050811 80%,
+      #03050a 100%
+    );
+  overflow: hidden;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: all;
+  user-select: none;
+  will-change: opacity, transform;
+}
+
+.exiting {
+  opacity: 0;
+  transform: scale(1.03) translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Optimized ambient background glow (GPU-friendly, no heavy real-time blur animations) */
+.glowBackdrop {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(34, 211, 238, 0.16) 0%,
+    rgba(167, 139, 250, 0.1) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: ambientPulse 3s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes ambientPulse {
+  0% {
+    transform: scale(0.9) translate3d(0, 0, 0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.1) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 800px;
+  width: 100%;
+  perspective: 1200px; /* 3D depth for zoom-in from screen */
+}
+
+/* Monogram Emblem */
+.emblemWrapper {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: emblemPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.emblemRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.25), inset 0 0 15px rgba(167, 139, 250, 0.15);
+  background: rgba(13, 19, 36, 0.7);
+  animation: spinEmblem 12s linear infinite;
+  will-change: transform;
+}
+
+.emblemText {
+  position: relative;
+  font-family: var(--font-primary, serif);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 60%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes emblemPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translate3d(0, -15px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes spinEmblem {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Name Heading with 3D Zoom-in from Outside the Screen */
+.nameHeading {
+  font-family: var(--font-primary, serif);
+  font-size: clamp(34px, 5.8vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 16px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 16px;
+  transform-style: preserve-3d;
+}
+
+.word {
+  display: inline-flex;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+}
+
+/* The Letter: starts zoomed in from outside screen and flies into original position */
+.letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, -10px, 450px) scale(3.5);
+  filter: blur(10px);
+  animation: zoomInLetter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity, filter;
+  background: linear-gradient(
+    115deg,
+    #ffffff 0%,
+    #e2e8f0 30%,
+    #22d3ee 55%,
+    #c084fc 80%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+}
+
+@keyframes zoomInLetter {
+  0% {
+    opacity: 0;
+    /* Far forward towards camera / outside display */
+    transform: translate3d(0, -15px, 500px) scale(3.8);
+    filter: blur(12px);
+  }
+  70% {
+    opacity: 1;
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    /* Locks directly in place */
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Subtitle Roles */
+.subtitle {
+  font-family: var(--font-primary, serif);
+  font-size: clamp(12px, 1.8vw, 15px);
+  font-weight: 400;
+  color: rgba(226, 232, 240, 0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 32px 0;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  animation: fadeSubtitle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 1.4s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  will-change: transform, opacity;
+}
+
+.subtitleDot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 6px #22d3ee;
+}
+
+@keyframes fadeSubtitle {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Progress Section: Driven completely by hardware-accelerated CSS */
+.progressSection {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeInProgress 0.6s ease forwards;
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeInProgress {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.progressTrack {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22d3ee, #a78bfa);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: fillProgressBar 3.2s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+  will-change: transform;
+}
+
+@keyframes fillProgressBar {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-code, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.statusText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #38bdf8;
+}
+
+.statusIndicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
+  animation: pulseDot 1s ease infinite alternate;
+}
+
+@keyframes pulseDot {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.percentage {
+  font-weight: 600;
+  color: #e2e8f0;
+}

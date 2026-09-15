@@ -1,0 +1,27 @@
+.pageTransition {
+  width: 100%;
+  animation: pageEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(16px) scale(0.99);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageTransition {
+    animation: none;
+  }
+}

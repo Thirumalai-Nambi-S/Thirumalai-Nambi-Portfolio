@@ -1,0 +1,49 @@
+.portraitSwap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+
+  &:hover,
+  &.isActive {
+    .faceDefault {
+      opacity: 0;
+    }
+
+    .faceHover {
+      opacity: 1;
+    }
+  }
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+/* Base real photo: fades out seamlessly on hover */
+.faceDefault {
+  opacity: 1;
+  z-index: 1;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Illustrated Ghibli photo: fades in seamlessly on hover */
+.faceHover {
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .faceDefault,
+  .faceHover {
+    transition: opacity 0.2s ease;
+  }
+}
