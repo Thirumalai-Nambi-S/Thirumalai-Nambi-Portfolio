@@ -119,6 +119,16 @@ export default async function RootLayout({
         width: "100%",
       }}
     >
+      {/*
+        Preconnect to the domains the YouTube embeds actually hit. This lets
+        the browser finish DNS + TLS for these origins while the rest of the
+        page is still loading, instead of paying that ~200-400ms setup cost
+        the moment a project video scrolls into view.
+      */}
+      <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+      <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
+      <link rel="dns-prefetch" href="https://i.ytimg.com" />
       <ToastProvider>
         <ThemeCustomizerProvider>
         <Column

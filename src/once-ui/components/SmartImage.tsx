@@ -33,6 +33,7 @@ const SmartImage: React.FC<SmartImageProps> = ({
 }) => {
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -168,73 +169,93 @@ const SmartImage: React.FC<SmartImageProps> = ({
           )
         )}
         {!isLoading && isYouTube && (
-          isInView ? (
-            <iframe
-              title={alt || "YouTube video demo"}
-              width="100%"
-              height="100%"
-              src={getYouTubeEmbedUrl(youtubeId)}
-              frameBorder="0"
-              allow="autoplay; encrypted-media; picture-in-picture"
-              referrerPolicy="strict-origin-when-cross-origin"
-              style={{
-                border: 0,
-                objectFit: objectFit,
-                pointerEvents: "none",
-              }}
-            />
-          ) : (
-            <>
-              {youtubeId && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
-                  alt={alt || "YouTube video thumbnail"}
-                  loading="lazy"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              <div
-                aria-hidden="true"
+          <>
+            {/*
+              The thumbnail stays mounted underneath the iframe at all times
+              (instead of being swapped out for it) and only fades away once
+              the iframe reports it has actually loaded. YouTube's embed
+              renders a solid black frame for a beat while its own player JS
+              boots up — without this, that black frame is the last thing
+              painted and reads as "stuck loading". With the thumbnail
+              underneath, viewers see the real preview image the whole time
+              and the video simply fades in on top once it's genuinely ready.
+            */}
+            {youtubeId && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`}
+                alt={alt || "YouTube video thumbnail"}
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
                 style={{
                   position: "absolute",
                   inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+            {isInView && (
+              <iframe
+                title={alt || "YouTube video demo"}
+                width="100%"
+                height="100%"
+                src={getYouTubeEmbedUrl(youtubeId)}
+                frameBorder="0"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                referrerPolicy="strict-origin-when-cross-origin"
+                onLoad={() => setIframeLoaded(true)}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  border: 0,
+                  objectFit: objectFit,
+                  pointerEvents: "none",
+                  opacity: iframeLoaded ? 1 : 0,
+                  transition: "opacity 0.4s ease",
+                }}
+              />
+            )}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(0,0,0,0.25)",
+                opacity: iframeLoaded ? 0 : 1,
+                transition: "opacity 0.3s ease",
+                pointerEvents: "none",
+              }}
+            >
+              <div
+                style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  background: "rgba(0,0,0,0.55)",
+                  border: "1px solid rgba(255,255,255,0.35)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: "rgba(0,0,0,0.25)",
                 }}
               >
                 <div
                   style={{
-                    width: "56px",
-                    height: "56px",
-                    borderRadius: "50%",
-                    background: "rgba(0,0,0,0.55)",
-                    border: "1px solid rgba(255,255,255,0.35)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    width: 0,
+                    height: 0,
+                    marginLeft: "4px",
+                    borderTop: "10px solid transparent",
+                    borderBottom: "10px solid transparent",
+                    borderLeft: "16px solid white",
                   }}
-                >
-                  <div
-                    style={{
-                      width: 0,
-                      height: 0,
-                      marginLeft: "4px",
-                      borderTop: "10px solid transparent",
-                      borderBottom: "10px solid transparent",
-                      borderLeft: "16px solid white",
-                    }}
-                  />
-                </div>
+                />
               </div>
-            </>
-          )
+            </div>
+          </>
         )}
         {!isLoading && !isVideo && !isYouTube && (
           <Image

@@ -45,6 +45,7 @@ export function ProjectLinks({
           href={item.href}
           icon={item.icon}
           tooltip={item.tooltip}
+          tooltipPosition="bottom"
           size={size}
           variant="secondary"
           data-border="rounded"
