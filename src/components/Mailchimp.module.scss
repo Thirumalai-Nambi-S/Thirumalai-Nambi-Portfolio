@@ -1,0 +1,262 @@
+@use "../styles/glass" as g;
+
+/* Newsletter — a frosted glass card in the current page tone. */
+
+@property --nl-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.card {
+  @include g.glass(32px);
+  position: relative;
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+  padding: clamp(26px, 4.5vw, 56px);
+  overflow: hidden;
+  isolation: isolate;
+
+  /* soft tone glow in the corner */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -140px;
+    right: -120px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--tone-a) 26%, transparent), transparent);
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+/* slow-travelling highlight along the border */
+.borderGlow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--nl-angle),
+    transparent 0%,
+    transparent 55%,
+    color-mix(in srgb, var(--tone-a) 85%, #fff) 72%,
+    color-mix(in srgb, var(--tone-b) 85%, #fff) 82%,
+    transparent 95%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: nlSpin 8s linear infinite;
+  pointer-events: none;
+  opacity: 0.8;
+}
+@keyframes nlSpin {
+  to {
+    --nl-angle: 360deg;
+  }
+}
+
+/* ── copy ── */
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 6px 14px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--tone-a) 55%, #fff);
+  background: color-mix(in srgb, var(--tone-a) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone-a) 40%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  span {
+    font-size: 0.7rem;
+  }
+}
+
+.title {
+  margin: 0 0 14px;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem) !important;
+  line-height: 1.12;
+  text-align: left;
+  text-wrap: balance;
+}
+
+.desc {
+  margin: 0 0 28px;
+  max-width: 520px;
+  font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+  line-height: 1.7;
+  color: var(--neutral-on-background-medium);
+}
+
+.topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.topic {
+  @include g.glass-soft(16px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 11px 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--neutral-on-background-strong);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tone-a) 55%, transparent);
+  }
+}
+.topicIcon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: color-mix(in srgb, var(--tone-a) 60%, #fff);
+  background: color-mix(in srgb, var(--tone-a) 18%, transparent);
+}
+
+/* ── ticket ── */
+.ticket {
+  @include g.glass-soft(26px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 2.4vw, 32px);
+  text-align: center;
+  background-color: rgba(4, 6, 10, 0.35);
+
+}
+.ticketIcon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
+  border-radius: 20px;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(135deg, var(--tone-a), var(--tone-b));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 14px 30px -12px color-mix(in srgb, var(--tone-a) 80%, transparent);
+  animation: nlFloat 5s ease-in-out infinite;
+}
+@keyframes nlFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+.ticketTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--neutral-on-background-strong);
+}
+.ticketSub {
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--neutral-on-background-weak);
+}
+
+.card a.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none !important;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 52%),
+    linear-gradient(120deg, color-mix(in srgb, var(--tone-a) 90%, #000), color-mix(in srgb, var(--tone-b) 85%, #000));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 14px 30px -14px color-mix(in srgb, var(--tone-a) 85%, transparent);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 20px 38px -14px color-mix(in srgb, var(--tone-a) 95%, transparent);
+  }
+  &:hover .arrow {
+    transform: translateX(4px);
+  }
+}
+.arrow {
+  display: inline-block;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.note {
+  margin: 12px 0 0;
+  font-size: 0.78rem;
+  color: var(--neutral-on-background-weak);
+  opacity: 0.85;
+}
+
+/* ── responsive ── */
+@media (max-width: 860px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .topics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .borderGlow,
+  .ticketIcon {
+    animation: none;
+  }
+}

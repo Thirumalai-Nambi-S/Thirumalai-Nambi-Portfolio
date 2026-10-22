@@ -3,45 +3,52 @@
     user-select: none;
 
     &.brand {
-        border-color: var(--brand-border-strong);
-        background-color: var(--brand-background-strong);
-        color: var(--brand-on-background-medium);
+        border-color: color-mix(in srgb, var(--brand-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--brand-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--brand-on-background-strong);
     }
 
     &.accent {
-        border-color: var(--accent-border-strong);
-        background-color: var(--accent-background-strong);
-        color: var(--accent-on-background-medium);
+        border-color: color-mix(in srgb, var(--accent-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--accent-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--accent-on-background-strong);
     }
 
     &.neutral {
-        border-color: var(--neutral-border-medium);
-        background-color: var(--surface-background);
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.08);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
         color: var(--neutral-on-background-medium);
     }
 
     &.warning {
-        border-color: var(--warning-border-strong);
-        background-color: var(--warning-background-strong);
-        color: var(--warning-on-background-medium);
+        border-color: color-mix(in srgb, var(--warning-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--warning-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--warning-on-background-strong);
     }
 
     &.danger {
-        border-color: var(--danger-border-strong);
-        background-color: var(--danger-background-strong);
-        color: var(--danger-on-background-medium);
+        border-color: color-mix(in srgb, var(--danger-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--danger-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--danger-on-background-strong);
     }
 
     &.success {
-        border-color: var(--success-border-strong);
-        background-color: var(--success-background-strong);
-        color: var(--success-on-background-medium);
+        border-color: color-mix(in srgb, var(--success-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--success-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--success-on-background-strong);
     }
 
     &.info {
-        border-color: var(--info-border-strong);
-        background-color: var(--info-background-strong);
-        color: var(--info-on-background-medium);
+        border-color: color-mix(in srgb, var(--info-solid-strong) 50%, rgba(255, 255, 255, 0.2));
+        background-color: color-mix(in srgb, var(--info-solid-strong) 24%, transparent);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        color: var(--info-on-background-strong);
     }
 
     &.gradient {

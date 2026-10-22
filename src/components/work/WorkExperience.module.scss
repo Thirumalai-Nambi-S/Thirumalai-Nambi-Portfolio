@@ -1,7 +1,8 @@
+@use "../../styles/glass" as g;
+
 .accentCard {
-  --card-accent: #22d3ee;
+  --card-accent: var(--tone-a);
   position: relative;
-  background: transparent !important;
   border-left: 3px solid color-mix(in srgb, var(--card-accent) 70%, transparent);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
 
@@ -71,4 +72,24 @@
     align-self: stretch;
     justify-content: center;
   }
+}
+
+
+/* Liquid Glass */
+.accentCard {
+  @include g.glass(var(--radius-l, 24px));
+  border-left: 3px solid color-mix(in srgb, var(--card-accent) 75%, transparent);
+  background-color: transparent !important;
+
+  &:hover {
+    @include g.glass-hover(color-mix(in srgb, var(--card-accent) 55%, transparent));
+    border-left-color: var(--card-accent);
+  }
+}
+.media {
+  @include g.glass-soft(var(--radius-m, 14px));
+}
+
+.glassBox {
+  @include g.glass(24px);
 }

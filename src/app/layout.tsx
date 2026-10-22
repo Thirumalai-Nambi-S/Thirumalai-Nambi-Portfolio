@@ -1,10 +1,14 @@
 import "@/once-ui/styles/index.scss";
 import "@/once-ui/tokens/index.scss";
+import "@/styles/tones.scss";
+import { TONES } from "@/app/resources/tones";
+import { PageTone } from "@/components/PageTone";
 
 import classNames from "classnames";
 
 import { Footer, Header, RouteGuard } from "@/components";
 import CursorSpotlight from "@/components/CursorSpotlight";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import LuminousBackground from "@/components/LuminousBackground";
 import { ThemeCustomizerProvider } from "@/contexts/ThemeCustomizerContext";
 import { ThemeCustomizerButton } from "@/components/theme-customizer/ThemeCustomizerButton";
@@ -100,6 +104,7 @@ export default async function RootLayout({
       as="html"
       lang="en"
       background="page"
+      suppressHydrationWarning
       data-neutral={style.neutral}
       data-brand={style.brand}
       data-accent={style.accent}
@@ -131,6 +136,7 @@ export default async function RootLayout({
       <link rel="dns-prefetch" href="https://i.ytimg.com" />
       <ToastProvider>
         <ThemeCustomizerProvider>
+        <PageTone />
         <Column
           as="body"
           fillWidth
@@ -145,7 +151,16 @@ export default async function RootLayout({
             alignItems: "center",
           }}
         >
+          {/* Sets the page tone before first paint so colours never flash. */}
+      <script
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: `(function(){try{var T=${JSON.stringify(TONES)};var p=location.pathname.replace(/\\/$/,'')||'/';var k='cyan';for(var r in T.routes){if(r==='/'?p==='/':(p===r||p.indexOf(r+'/')===0)){k=T.routes[r];break;}}var t=T.tones[k];var h=document.documentElement;var s=null;try{s=JSON.parse(localStorage.getItem('portfolio-theme-settings-v3')||'null');}catch(e){}if(s&&s.tone&&s.tone!=='auto'&&T.tones[s.tone]){t=T.tones[s.tone];}h.setAttribute('data-tone',t.tone);h.setAttribute('data-brand',t.brand);h.setAttribute('data-accent',t.accent);if(s&&s.spotlight){h.setAttribute('data-spot',s.spotlight);}}catch(e){}})();`,
+            }}
+          />
+
           <LoadingScreen />
+          <ScrollProgress />
           <LuminousBackground />
           <CursorSpotlight />
           <ThemeCustomizerButton />

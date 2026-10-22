@@ -1,3 +1,5 @@
+@use "../../styles/glass" as g;
+
 .grid {
   width: 100%;
   display: grid;
@@ -79,16 +81,16 @@
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 
   &:nth-child(4n + 1) {
-    --social-tint: #22d3ee;
+    --social-tint: var(--tone-a);
   }
   &:nth-child(4n + 2) {
-    --social-tint: #a78bfa;
+    --social-tint: var(--tone-a);
   }
   &:nth-child(4n + 3) {
-    --social-tint: #fb923c;
+    --social-tint: var(--tone-b);
   }
   &:nth-child(4n + 4) {
-    --social-tint: #34d399;
+    --social-tint: color-mix(in srgb, var(--tone-a) 70%, #fff);
   }
 
   &:hover {
@@ -106,5 +108,19 @@
 
   .socialGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* Liquid Glass */
+.card {
+  @include g.glass(28px);
+}
+.socialCard {
+  @include g.glass(22px);
+  @include g.glass-glint;
+
+  &:hover {
+    @include g.glass-hover(color-mix(in srgb, var(--social-tint, var(--tone-a)) 55%, transparent));
   }
 }

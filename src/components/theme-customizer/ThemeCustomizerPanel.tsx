@@ -5,45 +5,21 @@ import { createPortal } from "react-dom";
 import {
   CursorShape,
   CursorSize,
-  NeutralColor,
-  SchemeColor,
+  SpotlightLevel,
   SurfaceMode,
   THEME_PRESETS,
   useThemeCustomizer,
 } from "@/contexts/ThemeCustomizerContext";
 import styles from "./ThemeCustomizer.module.scss";
 
-const SCHEME_SWATCHES: { value: SchemeColor; hex: string; label: string }[] = [
-  { value: "blue", hex: "#3B82F6", label: "Blue" },
-  { value: "indigo", hex: "#6366F1", label: "Indigo" },
-  { value: "violet", hex: "#8B5CF6", label: "Violet" },
-  { value: "magenta", hex: "#D946EF", label: "Magenta" },
-  { value: "pink", hex: "#EC4899", label: "Pink" },
-  { value: "red", hex: "#EF4444", label: "Red" },
-  { value: "orange", hex: "#F97316", label: "Orange" },
-  { value: "yellow", hex: "#EAB308", label: "Yellow" },
-  { value: "moss", hex: "#84A98C", label: "Moss" },
-  { value: "green", hex: "#22C55E", label: "Green" },
-  { value: "emerald", hex: "#10B981", label: "Emerald" },
-  { value: "aqua", hex: "#06B6D4", label: "Aqua" },
-  { value: "cyan", hex: "#22D3EE", label: "Cyan" },
-];
-
-const NEUTRAL_SWATCHES: { value: NeutralColor; hex: string; label: string }[] = [
-  { value: "sand", hex: "#A8A29E", label: "Sand" },
-  { value: "gray", hex: "#71717A", label: "Gray" },
-  { value: "slate", hex: "#64748B", label: "Slate" },
-];
-
 const CURSOR_COLOR_PRESETS = [
-  { hex: "#22D3EE", label: "Cyan" },
-  { hex: "#60A5FA", label: "Blue" },
-  { hex: "#A78BFA", label: "Violet" },
-  { hex: "#F472B6", label: "Pink" },
+  { hex: "#2FA7B8", label: "Cyan" },
+  { hex: "#2FA882", label: "Emerald" },
+  { hex: "#C8404F", label: "Crimson" },
   { hex: "#FB7185", label: "Rose" },
-  { hex: "#FB923C", label: "Orange" },
-  { hex: "#FDE047", label: "Yellow" },
-  { hex: "#34D399", label: "Emerald" },
+  { hex: "#A78BFA", label: "Violet" },
+  { hex: "#F5B14C", label: "Amber" },
+  { hex: "#CFE8FF", label: "Ice" },
 ];
 
 const CURSOR_SHAPES: { value: CursorShape; label: string; icon: string }[] = [
@@ -54,22 +30,29 @@ const CURSOR_SHAPES: { value: CursorShape; label: string; icon: string }[] = [
 ];
 
 const CURSOR_SIZES: { value: CursorSize; label: string; size: number }[] = [
-  { value: "small", label: "S", size: 8 },
-  { value: "medium", label: "M", size: 12 },
-  { value: "large", label: "L", size: 16 },
+  { value: "small", label: "Small", size: 8 },
+  { value: "medium", label: "Medium", size: 12 },
+  { value: "large", label: "Large", size: 16 },
 ];
 
-const SURFACE_MODES: { value: SurfaceMode; label: string; icon: string; hint: string }[] = [
-  { value: "opaque", label: "Opaque", icon: "◼", hint: "Solid" },
-  { value: "translucent", label: "Frosted", icon: "◫", hint: "Glass" },
-  { value: "transparent", label: "Clear", icon: "◻", hint: "Blend" },
+const SPOT_LEVELS: { value: SpotlightLevel; label: string; hint: string }[] = [
+  { value: "soft", label: "Soft", hint: "Subtle" },
+  { value: "balanced", label: "Balanced", hint: "Default" },
+  { value: "vivid", label: "Vivid", hint: "Bold" },
 ];
+
+const SURFACE_MODES: { value: SurfaceMode; label: string; hint: string; fill: number }[] = [
+  { value: "transparent", label: "Clear", hint: "Barely there", fill: 0.04 },
+  { value: "translucent", label: "Frosted", hint: "Liquid glass", fill: 0.09 },
+  { value: "opaque", label: "Dense", hint: "Deep tint", fill: 0.22 },
+];
+
+type TabId = "themes" | "spotlight" | "glass";
 
 export function ThemeCustomizerPanel() {
-  const { settings, updateSettings, applyPreset, resetToDefaults, isOpen, closeCustomizer } =
-    useThemeCustomizer();
+  const { settings, updateSettings, applyPreset, resetToDefaults, isOpen, closeCustomizer } = useThemeCustomizer();
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"themes" | "cursor" | "colors" | "surface">("themes");
+  const [activeTab, setActiveTab] = useState<TabId>("themes");
 
   useEffect(() => setMounted(true), []);
 
@@ -88,74 +71,78 @@ export function ThemeCustomizerPanel() {
 
   if (!mounted || !isOpen) return null;
 
-  const tabs = [
-    { id: "themes" as const, label: "Themes", emoji: "🎨" },
-    { id: "cursor" as const, label: "Cursor", emoji: "✦" },
-    { id: "colors" as const, label: "Colors", emoji: "🌈" },
-    { id: "surface" as const, label: "Surface", emoji: "◈" },
+  const tabs: { id: TabId; label: string; glyph: string }[] = [
+    { id: "themes", label: "Themes", glyph: "◐" },
+    { id: "spotlight", label: "Spotlight", glyph: "✦" },
+    { id: "glass", label: "Glass", glyph: "◈" },
   ];
 
   return createPortal(
-    <div className={styles.backdrop} onClick={closeCustomizer} role="dialog" aria-modal="true">
+    <div className={styles.backdrop} onClick={closeCustomizer} role="dialog" aria-modal="true" aria-label="Theme Studio">
       <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
-
         {/* ── Header ── */}
         <div className={styles.panelHeader}>
           <div className={styles.headerLeft}>
-            <div className={styles.headerIcon}>🎨</div>
+            <span className={styles.headerOrb} aria-hidden="true" />
             <div>
               <div className={styles.headerTitle}>Theme Studio</div>
-              <div className={styles.headerSub}>Customize your experience</div>
+              <div className={styles.headerSub}>Tune the light, colour and glass</div>
             </div>
           </div>
           <button type="button" className={styles.closeBtn} onClick={closeCustomizer} aria-label="Close">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
 
-        {/* ── Tab Bar ── */}
-        <div className={styles.tabBar}>
+        {/* ── Tabs ── */}
+        <div className={styles.tabBar} role="tablist">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
               className={[styles.tab, activeTab === tab.id ? styles.tabActive : ""].join(" ")}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className={styles.tabEmoji}>{tab.emoji}</span>
-              <span>{tab.label}</span>
+              <span className={styles.tabGlyph} aria-hidden="true">
+                {tab.glyph}
+              </span>
+              {tab.label}
             </button>
           ))}
         </div>
 
         {/* ── Body ── */}
         <div className={styles.panelBody}>
-
-          {/* ────── THEMES TAB ────── */}
           {activeTab === "themes" && (
             <div className={styles.tabContent}>
-              <p className={styles.tabDescription}>Choose a built-in color palette for your portfolio.</p>
+              <p className={styles.tabDescription}>Pick a light for the whole portfolio.</p>
               <div className={styles.presetGrid}>
                 {Object.entries(THEME_PRESETS).map(([id, preset]) => {
-                  const a = SCHEME_SWATCHES.find((s) => s.value === preset.brand)?.hex ?? "#22d3ee";
-                  const b = SCHEME_SWATCHES.find((s) => s.value === preset.accent)?.hex ?? "#a78bfa";
                   const isActive = settings.activePreset === id;
+                  const [a, b, c] = preset.swatch;
                   return (
                     <button
                       key={id}
                       type="button"
                       className={[styles.presetCard, isActive ? styles.presetActive : ""].join(" ")}
                       onClick={() => applyPreset(id)}
-                      style={{ ["--pa" as any]: a, ["--pb" as any]: b }}
+                      aria-pressed={isActive}
+                      style={{ ["--pa" as string]: a, ["--pb" as string]: b, ["--pc" as string]: c } as React.CSSProperties}
                     >
-                      <div className={styles.presetGradBar} />
-                      <div className={styles.presetInfo}>
+                      <span className={styles.presetOrb} aria-hidden="true" />
+                      <span className={styles.presetInfo}>
                         <span className={styles.presetName}>{preset.label}</span>
-                        {isActive && <span className={styles.presetBadge}>Active</span>}
-                      </div>
-                      <span className={styles.presetDesc}>{preset.description}</span>
+                        <span className={styles.presetDesc}>{preset.description}</span>
+                      </span>
+                      {isActive && (
+                        <span className={styles.presetCheck} aria-hidden="true">
+                          ✓
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -163,15 +150,21 @@ export function ThemeCustomizerPanel() {
             </div>
           )}
 
-          {/* ────── CURSOR TAB ────── */}
-          {activeTab === "cursor" && (
+          {activeTab === "spotlight" && (
             <div className={styles.tabContent}>
+              <p className={styles.tabDescription}>The cursor spotlight is the main light source of the site.</p>
+
               <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>🎨</span>
-                  <span className={styles.fieldTitle}>Trail Color</span>
-                </div>
+                <div className={styles.fieldTitle}>Colour</div>
                 <div className={styles.colorGrid}>
+                  <button
+                    type="button"
+                    title="Auto — follows the page colour"
+                    className={[styles.colorDot, styles.colorAuto, settings.cursorColor === "auto" ? styles.colorDotActive : ""].join(" ")}
+                    onClick={() => updateSettings({ cursorColor: "auto" })}
+                  >
+                    <span>A</span>
+                  </button>
                   {CURSOR_COLOR_PRESETS.map(({ hex, label }) => (
                     <button
                       key={hex}
@@ -181,15 +174,15 @@ export function ThemeCustomizerPanel() {
                         styles.colorDot,
                         settings.cursorColor.toLowerCase() === hex.toLowerCase() ? styles.colorDotActive : "",
                       ].join(" ")}
-                      style={{ background: hex, ["--glow" as any]: hex }}
+                      style={{ background: hex, ["--glow" as string]: hex } as React.CSSProperties}
                       onClick={() => updateSettings({ cursorColor: hex })}
                     />
                   ))}
-                  <label className={styles.colorPicker} title="Custom color">
+                  <label className={styles.colorPicker} title="Custom colour">
                     <span>+</span>
                     <input
                       type="color"
-                      value={settings.cursorColor}
+                      value={settings.cursorColor === "auto" ? "#2fa7b8" : settings.cursorColor}
                       onChange={(e) => updateSettings({ cursorColor: e.target.value })}
                     />
                   </label>
@@ -197,40 +190,51 @@ export function ThemeCustomizerPanel() {
               </div>
 
               <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>◇</span>
-                  <span className={styles.fieldTitle}>Shape</span>
+                <div className={styles.fieldTitle}>Intensity</div>
+                <div className={styles.segRow}>
+                  {SPOT_LEVELS.map((l) => (
+                    <button
+                      key={l.value}
+                      type="button"
+                      className={[styles.seg, settings.spotlight === l.value ? styles.segActive : ""].join(" ")}
+                      onClick={() => updateSettings({ spotlight: l.value })}
+                    >
+                      <span className={styles.segMain}>{l.label}</span>
+                      <span className={styles.segHint}>{l.hint}</span>
+                    </button>
+                  ))}
                 </div>
-                <div className={styles.chipRow}>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <div className={styles.fieldTitle}>Shape</div>
+                <div className={styles.segRow}>
                   {CURSOR_SHAPES.map((shape) => (
                     <button
                       key={shape.value}
                       type="button"
-                      className={[styles.chip, settings.cursorShape === shape.value ? styles.chipActive : ""].join(" ")}
+                      className={[styles.seg, settings.cursorShape === shape.value ? styles.segActive : ""].join(" ")}
                       onClick={() => updateSettings({ cursorShape: shape.value })}
                     >
-                      <span className={styles.chipIcon}>{shape.icon}</span>
-                      {shape.label}
+                      <span className={styles.segIcon}>{shape.icon}</span>
+                      <span className={styles.segMain}>{shape.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>⊙</span>
-                  <span className={styles.fieldTitle}>Size</span>
-                </div>
-                <div className={styles.sizeRow}>
+                <div className={styles.fieldTitle}>Size</div>
+                <div className={styles.segRow}>
                   {CURSOR_SIZES.map((s) => (
                     <button
                       key={s.value}
                       type="button"
-                      className={[styles.sizeBtn, settings.cursorSize === s.value ? styles.sizeBtnActive : ""].join(" ")}
+                      className={[styles.seg, settings.cursorSize === s.value ? styles.segActive : ""].join(" ")}
                       onClick={() => updateSettings({ cursorSize: s.value })}
                     >
                       <span className={styles.sizeDot} style={{ width: s.size, height: s.size }} />
-                      <span>{s.label}</span>
+                      <span className={styles.segMain}>{s.label}</span>
                     </button>
                   ))}
                 </div>
@@ -238,73 +242,9 @@ export function ThemeCustomizerPanel() {
             </div>
           )}
 
-          {/* ────── COLORS TAB ────── */}
-          {activeTab === "colors" && (
+          {activeTab === "glass" && (
             <div className={styles.tabContent}>
-              <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>★</span>
-                  <span className={styles.fieldTitle}>Brand Color</span>
-                </div>
-                <div className={styles.colorGrid}>
-                  {SCHEME_SWATCHES.map((s) => (
-                    <button
-                      key={s.value}
-                      type="button"
-                      title={s.label}
-                      className={[styles.colorDot, settings.brand === s.value ? styles.colorDotActive : ""].join(" ")}
-                      style={{ background: s.hex, ["--glow" as any]: s.hex }}
-                      onClick={() => updateSettings({ brand: s.value })}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>◈</span>
-                  <span className={styles.fieldTitle}>Accent Color</span>
-                </div>
-                <div className={styles.colorGrid}>
-                  {SCHEME_SWATCHES.map((s) => (
-                    <button
-                      key={s.value}
-                      type="button"
-                      title={s.label}
-                      className={[styles.colorDot, settings.accent === s.value ? styles.colorDotActive : ""].join(" ")}
-                      style={{ background: s.hex, ["--glow" as any]: s.hex }}
-                      onClick={() => updateSettings({ accent: s.value })}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <div className={styles.fieldHeader}>
-                  <span className={styles.fieldIcon}>○</span>
-                  <span className={styles.fieldTitle}>Neutral Tone</span>
-                </div>
-                <div className={styles.neutralRow}>
-                  {NEUTRAL_SWATCHES.map((n) => (
-                    <button
-                      key={n.value}
-                      type="button"
-                      className={[styles.neutralCard, settings.neutral === n.value ? styles.neutralActive : ""].join(" ")}
-                      onClick={() => updateSettings({ neutral: n.value })}
-                    >
-                      <span className={styles.neutralDot} style={{ background: n.hex }} />
-                      <span>{n.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ────── SURFACE TAB ────── */}
-          {activeTab === "surface" && (
-            <div className={styles.tabContent}>
-              <p className={styles.tabDescription}>Control how cards and panels appear across the site.</p>
+              <p className={styles.tabDescription}>How frosted the cards and panels look.</p>
               <div className={styles.surfaceGrid}>
                 {SURFACE_MODES.map((mode) => (
                   <button
@@ -312,13 +252,15 @@ export function ThemeCustomizerPanel() {
                     type="button"
                     className={[styles.surfaceCard, settings.surfaceMode === mode.value ? styles.surfaceActive : ""].join(" ")}
                     onClick={() => updateSettings({ surfaceMode: mode.value })}
+                    aria-pressed={settings.surfaceMode === mode.value}
                   >
-                    <span className={styles.surfaceIcon}>{mode.icon}</span>
+                    <span
+                      className={styles.surfacePreview}
+                      style={{ ["--fill" as string]: mode.fill } as React.CSSProperties}
+                      aria-hidden="true"
+                    />
                     <span className={styles.surfaceName}>{mode.label}</span>
                     <span className={styles.surfaceHint}>{mode.hint}</span>
-                    {settings.surfaceMode === mode.value && (
-                      <span className={styles.surfaceCheck}>✓</span>
-                    )}
                   </button>
                 ))}
               </div>
@@ -329,12 +271,12 @@ export function ThemeCustomizerPanel() {
         {/* ── Footer ── */}
         <div className={styles.panelFooter}>
           <button type="button" className={styles.resetBtn} onClick={resetToDefaults}>
-            ↺ Reset defaults
+            ↺ Reset
           </button>
-          <span className={styles.footerHint}>Press Esc to close</span>
+          <span className={styles.footerHint}>Esc to close</span>
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

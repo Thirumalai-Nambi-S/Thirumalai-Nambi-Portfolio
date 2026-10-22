@@ -76,7 +76,7 @@ export function WorkExperience() {
           gap="8"
           padding="32"
           radius="l"
-          background="neutral-alpha-weak"
+          className={styles.glassBox}
           horizontal="center"
           align="center"
         >

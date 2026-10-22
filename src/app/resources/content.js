@@ -102,6 +102,28 @@ const about = {
     </>
   ),
 
+  // Short, scannable version of the introduction shown at the top of the About page.
+  summary:
+    "Final-year B.Tech AI & Data Science undergraduate who turns raw, messy data and ambitious ideas into intelligent, working systems.",
+  focus: [
+    {
+      icon: "brain",
+      title: "Machine learning",
+      description: "End-to-end ML pipelines with Python, PySpark and Scikit-learn — preprocessing to deployment.",
+    },
+    {
+      icon: "code",
+      title: "Full-stack",
+      description: "Responsive, production-ready web apps with React, Next.js and TypeScript.",
+    },
+    {
+      icon: "chartBar",
+      title: "NLP · Vision · IoT",
+      description: "Hands-on exposure to NLP, computer vision and IoT-driven projects.",
+    },
+  ],
+  status: "Open to full-time roles — AI/ML Engineer, Data Scientist or Full-Stack Developer.",
+
   tableOfContent: {
     display: true,
     subItems: false,
@@ -188,16 +210,11 @@ const about = {
     institutions: [
       {
         name: "St Peter's College of Engineering and Technology, Avadi, Chennai",
-        description: (
-          <>
-            B.Tech in Artificial Intelligence and Data Science (Honours) · 2023 – 2027 · CGPA:
-            8.3
-          </>
-        ),
+        description: "B.Tech in Artificial Intelligence and Data Science (Honours) · 2023 – 2027 · CGPA: 8.3",
       },
       {
         name: "Good Shepherd Matriculation Higher Secondary School",
-        description: <>Completed HSSLC Grade with a percentage of 74.</>,
+        description: "Completed HSSLC Grade with a percentage of 74.",
       },
     ],
   },

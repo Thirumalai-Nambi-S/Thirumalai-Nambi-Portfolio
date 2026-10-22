@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  Avatar,
-  Button,
-  Column,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  SmartImage,
-  Tag,
-  Text,
-} from "@/once-ui/components";
+import Link from "next/link";
+import Image from "next/image";
+import { Heading, Icon, SmartImage, Text } from "@/once-ui/components";
 import { baseURL } from "@/app/resources";
-import TableOfContents from "@/components/about/TableOfContents";
-import { Panel } from "@/components/Panel";
+import { SectionNav, type SectionNavItem } from "@/components/about/SectionNav";
 import styles from "@/components/about/about.module.scss";
 import { person, about, social } from "@/app/resources/content";
 import { SkillGrid } from "@/components/about/SkillGrid";
@@ -48,31 +38,55 @@ export async function generateMetadata() {
   };
 }
 
-export default function About() {
-  const structure = [
-    {
-      title: about.intro.title,
-      display: about.intro.display,
-      items: [],
-    },
-    {
-      title: about.work.title,
-      display: about.work.display,
-      items: about.work.experiences.map((experience) => experience.company),
-    },
-    {
-      title: about.studies.title,
-      display: about.studies.display,
-      items: about.studies.institutions.map((institution) => institution.name),
-    },
-    {
-      title: about.technical.title,
-      display: about.technical.display,
-      items: about.technical.skills.map((skill) => skill.title),
-    },
-  ];
+const ACCENT = {
+  intro: "#3fb894",
+  work: "#35b3a8",
+  studies: "#4dbb82",
+  skills: "#3aa9c0",
+  repos: "#46bd9d",
+};
+
+type SectionHeadProps = {
+  index: number;
+  icon: string;
+  title: string;
+  subtitle?: string;
+  accent: string;
+};
+
+function SectionHead({ index, icon, title, subtitle, accent }: SectionHeadProps) {
   return (
-    <Column maxWidth="l" horizontal="center" fillWidth style={{ margin: "0 auto" }}>
+    <header className={styles.sectionHead}>
+      <span className={styles.sectionIcon} style={{ color: accent }}>
+        <Icon name={icon} size="m" />
+      </span>
+      <div className={styles.sectionHeadText}>
+        <p className={styles.sectionKicker} style={{ color: accent }}>
+          {String(index).padStart(2, "0")}
+          {subtitle ? <span> · {subtitle}</span> : null}
+        </p>
+        <Heading as="h2" variant="display-strong-s" className={styles.sectionTitle}>
+          {title}
+        </Heading>
+      </div>
+    </header>
+  );
+}
+
+export default function About() {
+  const navItems: SectionNavItem[] = [
+    about.intro.display && { id: "introduction", label: about.intro.title, accent: ACCENT.intro },
+    about.work.display && { id: "experience", label: about.work.title, accent: ACCENT.work },
+    about.studies.display && { id: "studies", label: about.studies.title, accent: ACCENT.studies },
+    about.technical.display && { id: "skills", label: about.technical.title, accent: ACCENT.skills },
+    about.repoSkills?.display && { id: "repositories", label: "Repository skills", accent: ACCENT.repos },
+  ].filter(Boolean) as SectionNavItem[];
+
+  const num = (id: string) => navItems.findIndex((n) => n.id === id) + 1;
+  const socials = social.filter((item) => item.link);
+
+  return (
+    <div className={styles.wrap}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -82,11 +96,11 @@ export default function About() {
             "@type": "Person",
             name: person.name,
             jobTitle: person.role,
-            description: about.intro.description,
+            description: about.description,
             url: `https://${baseURL}/about`,
             image: `${baseURL}/images/${person.avatar}`,
             sameAs: social
-              .filter((item) => item.link && !item.link.startsWith("mailto:")) // Filter out empty links and email links
+              .filter((item) => item.link && !item.link.startsWith("mailto:"))
               .map((item) => item.link),
             worksFor: {
               "@type": "Organization",
@@ -95,319 +109,331 @@ export default function About() {
           }),
         }}
       />
-      {about.tableOfContent.display && <TableOfContents structure={structure} about={about} />}
-      <Flex fillWidth mobileDirection="column" horizontal="center" gap="40">
-        {about.avatar.display && (
-          <ScrollReveal
-            direction="left"
-            style={{ height: "fit-content", width: "auto", flexShrink: 0 }}
-          >
-          <Panel accent="cyan" noPadding>
-          <Column
-            className={styles.avatar}
-            minWidth={18}
-            maxWidth={22}
-            paddingX="l"
-            paddingY="l"
-            gap="m"
-            flex={3}
-            horizontal="center"
-          >
-            <Avatar src={person.avatar} size="xl" priority className={styles.squareAvatar} />
-            <Flex gap="8" vertical="center">
-              <Icon onBackground="accent-weak" name="globe" />
-              {person.location}
-            </Flex>
-            {person.languages.length > 0 && (
-              <Flex wrap gap="8">
-                {person.languages.map((language, index) => (
-                  <Tag key={index} size="l">
-                    {language}
-                  </Tag>
-                ))}
-              </Flex>
-            )}
-          </Column>
-          </Panel>
-          </ScrollReveal>
-        )}
-        <Column className={styles.blockAlign} flex={9} fillWidth>
-          <ScrollReveal direction="right">
-          <Panel id={about.intro.title} accent="cyan" className={styles.sectionPanel} noPadding>
-          <Column
-            fillWidth
-            minHeight="160"
-            vertical="center"
-            padding="l"
-          >
-            {about.calendar.display && (
-              <Flex
-                fitWidth
-                border="brand-alpha-medium"
-                className={styles.blockAlign}
-                style={{
-                  backdropFilter: "blur(var(--static-space-1))",
-                }}
-                background="brand-alpha-weak"
-                radius="full"
-                padding="4"
-                gap="8"
-                marginBottom="m"
-                vertical="center"
-              >
-                <Icon paddingLeft="12" name="calendar" onBackground="brand-weak" />
-                <Flex paddingX="8">Schedule a call</Flex>
-                <IconButton
-                  href={about.calendar.link}
-                  data-border="rounded"
-                  variant="secondary"
-                  icon="chevronRight"
-                />
-              </Flex>
-            )}
-            <Heading className={styles.textAlign} variant="display-strong-xl">
-              {person.name}
-            </Heading>
-            <Text
-              className={styles.textAlign}
-              variant="display-default-xs"
-              onBackground="neutral-weak"
-            >
-              {person.role}
-            </Text>
-            {social.length > 0 && (
-              <Flex className={styles.blockAlign} paddingTop="20" paddingBottom="8" gap="8" wrap horizontal="center" fitWidth>
-                {social.map(
-                  (item) =>
-                    item.link && (
-                        <React.Fragment key={item.name}>
-                            <Button
-                                className="s-flex-hide"
-                                href={item.link}
-                                prefixIcon={item.icon}
-                                label={item.name}
-                                size="s"
-                                variant="secondary"
-                            />
-                            <IconButton
-                                className="s-flex-show"
-                                size="l"
-                                href={item.link}
-                                icon={item.icon}
-                                variant="secondary"
-                            />
-                        </React.Fragment>
-                    ),
-                )}
-              </Flex>
-            )}
-          </Column>
-          </Panel>
-          </ScrollReveal>
 
-          {about.intro.display && (
-            <ScrollReveal direction="up" delay={0.05}>
-            <Panel accent="cyan" className={styles.sectionPanel}>
-            <Column textVariant="body-default-l" fillWidth gap="m">
-              <Text variant="body-default-l" onBackground="neutral-weak">
-                {about.introHighlight}
-              </Text>
-              <Text as="p" variant="body-default-l" style={{ lineHeight: 1.7 }}>
-                {about.intro.description}
-              </Text>
-            </Column>
-            </Panel>
-            </ScrollReveal>
-          )}
+      <div className={styles.layout}>
+        {/* ─────────────── Sidebar ─────────────── */}
+        <aside className={styles.sidebar}>
+          {about.avatar.display && (
+            <ScrollReveal direction="left">
+              <div className={styles.profileCard}>
+                <div className={styles.profilePhoto}>
+                  <Image
+                    src={person.avatar}
+                    alt={person.name.trim()}
+                    fill
+                    priority
+                    sizes="160px"
+                    className={styles.profilePhotoImg}
+                  />
+                </div>
 
-          {about.work.display && (
-            <ScrollReveal direction="up" delay={0.1}>
-            <Panel id={about.work.title} accent="violet" className={styles.sectionPanel}>
-              <Heading as="h2" variant="display-strong-s" marginBottom="m">
-                {about.work.title}
-              </Heading>
-              <Column fillWidth gap="l">
-                {about.work.experiences.map((experience, index) => (
-                  <Column key={`${experience.company}-${experience.role}-${index}`} fillWidth>
-                    <Flex fillWidth horizontal="space-between" vertical="end" marginBottom="4">
-                      <Text id={experience.company} variant="heading-strong-l">
-                        {experience.company}
-                      </Text>
-                      <Text variant="heading-default-xs" onBackground="neutral-weak">
-                        {experience.timeframe}
-                      </Text>
-                    </Flex>
-                    <Text variant="body-default-s" onBackground="brand-weak" marginBottom="m">
-                      {experience.role}
-                    </Text>
-                    <Column as="ul" gap="16">
-                      {experience.achievements.map((achievement: React.ReactNode, index: number) => (
-                        <Text
-                          as="li"
-                          variant="body-default-m"
-                          key={`${experience.company}-${index}`}
+                <div className={styles.profileInfo}>
+                  <p className={styles.profileName}>{person.name.trim()} S</p>
+                  <div className={styles.profileMeta}>
+                    <Icon name="location" size="xs" onBackground="accent-weak" />
+                    <span>{person.city}</span>
+                    <span className={styles.metaDot} aria-hidden="true">·</span>
+                    <span>{person.location}</span>
+                  </div>
+
+                  {person.languages.length > 0 && (
+                    <ul className={styles.chips}>
+                      {person.languages.map((language) => (
+                        <li key={language}>{language}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <p className={styles.openBadge}>
+                    <span className={styles.pulse} aria-hidden="true" /> Open to work
+                  </p>
+
+                  {socials.length > 0 && (
+                    <div className={styles.socialRow}>
+                      {socials.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.link}
+                          target={item.link.startsWith("mailto:") ? undefined : "_blank"}
+                          rel="noopener noreferrer"
+                          aria-label={item.name}
+                          title={item.name}
+                          className={styles.socialBtn}
                         >
-                          {achievement}
-                        </Text>
+                          <Icon name={item.icon} size="s" />
+                        </a>
                       ))}
-                    </Column>
-                    {experience.images.length > 0 && (
-                      <Flex fillWidth paddingTop="m" paddingLeft="40" wrap>
-                        {experience.images.map((image, index) => (
-                          <Flex
-                            key={index}
-                            border="neutral-medium"
-                            radius="m"
-                            //@ts-ignore
-                            minWidth={image.width}
-                            //@ts-ignore
-                            height={image.height}
-                          >
-                            <SmartImage
-                              enlarge
-                              radius="m"
-                              //@ts-ignore
-                              sizes={image.width.toString()}
-                              //@ts-ignore
-                              alt={image.alt}
-                              //@ts-ignore
-                              src={image.src}
-                            />
-                          </Flex>
-                        ))}
-                      </Flex>
-                    )}
-                  </Column>
-                ))}
-              </Column>
-            </Panel>
-            </ScrollReveal>
-          )}
-
-          {about.studies.display && (
-            <ScrollReveal direction="up" delay={0.15}>
-            <Panel id={about.studies.title} accent="orange" className={styles.sectionPanel}>
-              <Heading as="h2" variant="display-strong-s" marginBottom="m">
-                {about.studies.title}
-              </Heading>
-              <Column fillWidth gap="l">
-                {about.studies.institutions.map((institution, index) => (
-                  <Column key={`${institution.name}-${index}`} fillWidth gap="4">
-                    <Text id={institution.name} variant="heading-strong-l">
-                      {institution.name}
-                    </Text>
-                    <Text variant="heading-default-xs" onBackground="neutral-weak">
-                      {institution.description}
-                    </Text>
-                  </Column>
-                ))}
-              </Column>
-            </Panel>
-            </ScrollReveal>
-          )}
-
-          {about.technical.display && (
-            <ScrollReveal direction="up" delay={0.2}>
-            <Panel id={about.technical.title} accent="emerald" className={styles.sectionPanel}>
-              <Heading
-                as="h2"
-                variant="display-strong-s"
-                marginBottom="40"
-              >
-                {about.technical.title}
-              </Heading>
-              <div className={styles.techSkillGrid}>
-                {about.technical.skills.map((skill: { title: string; icon?: string; description: React.ReactNode }, index: number) => {
-                  const palette = ["#22D3EE", "#A78BFA", "#FB923C", "#34D399"];
-                  const tint = palette[index % palette.length];
-                  return (
-                    <div
-                      key={`${skill.title}-${index}`}
-                      className={styles.techSkillCard}
-                      style={{ ["--card-tint" as any]: tint }}
-                    >
-                      <div className={styles.techSkillIcon} style={{ color: tint }}>
-                        <Icon name={skill.icon || "grid"} size="m" />
-                      </div>
-                      <Text as="h3" variant="heading-strong-m" marginTop="4" marginBottom="4">
-                        {skill.title}
-                      </Text>
-                      <Text as="p" variant="body-default-s" onBackground="neutral-weak" wrap="balance">
-                        {skill.description}
-                      </Text>
                     </div>
-                  );
-                })}
-              </div>
+                  )}
 
-              {about.technical.categories && about.technical.categories.length > 0 && (
-                <Column fillWidth gap="20" marginTop="32">
-                  {about.technical.categories.map((category: { title: string; items: string[] }, index: number) => (
-                    <Column key={`${category.title}-${index}`} fillWidth gap="8">
-                      <Text
-                        variant="label-default-s"
-                        onBackground="neutral-weak"
-                        style={{ textTransform: "uppercase", letterSpacing: "0.06em" }}
-                      >
-                        {category.title}
-                      </Text>
-                      <SkillGrid items={category.items} />
-                    </Column>
-                  ))}
-                </Column>
-              )}
-            </Panel>
-            </ScrollReveal>
-          )}
-
-          {about.repoSkills?.display && (
-            <ScrollReveal direction="up" delay={0.25}>
-            <Panel accent="cyan" className={styles.sectionPanel}>
-              <Heading
-                as="h2"
-                id={about.repoSkills.title}
-                variant="display-strong-s"
-                marginBottom="12"
-              >
-                {about.repoSkills.title}
-              </Heading>
-              <Text
-                variant="body-default-m"
-                onBackground="neutral-weak"
-                marginBottom="24"
-                style={{ maxWidth: "640px" }}
-              >
-                {about.repoSkills.description}
-              </Text>
-              <div className={styles.repoSkillGrid}>
-                {about.repoSkills.repos.map((repo: { name: string; url?: string; skills: string[] }) => (
-                  <a
-                    key={repo.name}
-                    href={repo.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.repoSkillCard}
-                  >
-                    <Flex gap="8" vertical="center" marginBottom="8" horizontal="space-between">
-                      <Flex gap="8" vertical="center">
-                        <Icon name="github" size="s" onBackground="neutral-weak" />
-                        <Text variant="heading-strong-s">{repo.name}</Text>
-                      </Flex>
-                      <Icon name="arrowUpRightFromSquare" size="xs" onBackground="neutral-weak" />
-                    </Flex>
-                    <Flex wrap gap="8">
-                      {repo.skills.map((skill: string) => (
-                        <Tag key={skill} size="s" variant="brand" label={skill} />
-                      ))}
-                    </Flex>
+                  <a href={person.resume} download className={`${styles.btn} ${styles.btnPrimary}`}>
+                    Download Resume
                   </a>
-                ))}
+                </div>
               </div>
-            </Panel>
             </ScrollReveal>
           )}
-        </Column>
-      </Flex>
-    </Column>
+
+          {about.tableOfContent.display && navItems.length > 0 && <SectionNav items={navItems} />}
+        </aside>
+
+        {/* ─────────────── Content ─────────────── */}
+        <div className={styles.content}>
+          {/* 01 — Introduction */}
+          {about.intro.display && (
+            <ScrollReveal direction="up">
+              <section
+                id="introduction"
+                className={styles.section}
+                style={{ ["--accent" as string]: ACCENT.intro } as React.CSSProperties}
+              >
+                <p className={styles.eyebrow}>About me</p>
+                <Heading as="h1" variant="display-strong-xl" className={styles.pageName}>
+                  <span className={styles.nameGradient}>{person.name.trim()} S</span>
+                </Heading>
+                <p className={styles.role}>{person.role}</p>
+
+                <p className={styles.lead}>{about.summary}</p>
+
+                <ul className={styles.focusGrid}>
+                  {about.focus.map((f) => (
+                    <li key={f.title} className={styles.focusCard}>
+                      <span className={styles.focusIcon}>
+                        <Icon name={f.icon} size="m" />
+                      </span>
+                      <h3>{f.title}</h3>
+                      <p>{f.description}</p>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className={styles.statusBar}>
+                  <p>
+                    <span className={styles.pulse} aria-hidden="true" /> {about.status}
+                  </p>
+                  <div className={styles.statusActions}>
+                    <Link href="/contact" className={`${styles.btn} ${styles.btnPrimary}`}>
+                      Get in touch
+                    </Link>
+                    <Link href="/project" className={`${styles.btn} ${styles.btnGhost}`}>
+                      See my work
+                    </Link>
+                  </div>
+                </div>
+
+                <details className={styles.more}>
+                  <summary>Read the full introduction</summary>
+                  <Text as="p" variant="body-default-m" className={styles.moreText}>
+                    {about.intro.description}
+                  </Text>
+                </details>
+              </section>
+            </ScrollReveal>
+          )}
+
+          {/* 02 — Experience */}
+          {about.work.display && (
+            <ScrollReveal direction="up">
+              <section
+                id="experience"
+                className={styles.section}
+                style={{ ["--accent" as string]: ACCENT.work } as React.CSSProperties}
+              >
+                <SectionHead
+                  index={num("experience")}
+                  icon="stack"
+                  title={about.work.title}
+                  subtitle="Internships"
+                  accent={ACCENT.work}
+                />
+                <ol className={styles.timeline}>
+                  {about.work.experiences.map((experience, index) => (
+                    <li key={`${experience.company}-${index}`} className={styles.job}>
+                      <span className={styles.timelineDot} aria-hidden="true" />
+                      <div className={styles.jobHead}>
+                        <div>
+                          <h3 id={experience.company} className={styles.jobCompany}>
+                            {experience.company}
+                          </h3>
+                          <p className={styles.jobRole}>{experience.role}</p>
+                        </div>
+                        <span className={styles.dateChip}>{experience.timeframe}</span>
+                      </div>
+                      <ul className={styles.checkList}>
+                        {experience.achievements.map((achievement: React.ReactNode, i: number) => (
+                          <li key={`${experience.company}-${i}`}>{achievement}</li>
+                        ))}
+                      </ul>
+                      {experience.images.length > 0 && (
+                        <div className={styles.jobImages}>
+                          {experience.images.map((image, i) => (
+                            <div
+                              key={i}
+                              className={styles.jobImage}
+                              //@ts-ignore
+                              style={{ minWidth: image.width, height: image.height }}
+                            >
+                              <SmartImage
+                                enlarge
+                                radius="m"
+                                //@ts-ignore
+                                sizes={image.width.toString()}
+                                //@ts-ignore
+                                alt={image.alt}
+                                //@ts-ignore
+                                src={image.src}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </ScrollReveal>
+          )}
+
+          {/* 03 — Studies */}
+          {about.studies.display && (
+            <ScrollReveal direction="up">
+              <section
+                id="studies"
+                className={styles.section}
+                style={{ ["--accent" as string]: ACCENT.studies } as React.CSSProperties}
+              >
+                <SectionHead
+                  index={num("studies")}
+                  icon="book"
+                  title={about.studies.title}
+                  subtitle="Education"
+                  accent={ACCENT.studies}
+                />
+                <ul className={styles.eduList}>
+                  {about.studies.institutions.map((institution, index) => {
+                    const [first, ...rest] = institution.description.split(" · ");
+                    return (
+                      <li key={`${institution.name}-${index}`} className={styles.edu}>
+                        <h3 id={institution.name} className={styles.eduName}>
+                          {institution.name}
+                        </h3>
+                        <p className={styles.eduDesc}>{first}</p>
+                        {rest.length > 0 && (
+                          <ul className={styles.chips}>
+                            {rest.map((r) => (
+                              <li key={r}>{r}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            </ScrollReveal>
+          )}
+
+          {/* 04 — Technical skills */}
+          {about.technical.display && (
+            <ScrollReveal direction="up">
+              <section
+                id="skills"
+                className={styles.section}
+                style={{ ["--accent" as string]: ACCENT.skills } as React.CSSProperties}
+              >
+                <SectionHead
+                  index={num("skills")}
+                  icon="code"
+                  title={about.technical.title}
+                  subtitle="Toolbox"
+                  accent={ACCENT.skills}
+                />
+                <div className={styles.techSkillGrid}>
+                  {about.technical.skills.map(
+                    (skill: { title: string; icon?: string; description: React.ReactNode }, index: number) => {
+                      const palette = ["#3fb894", "#3aa9c0", "#4dbb82", "#35b3a8"];
+                      const tint = palette[index % palette.length];
+                      return (
+                        <div
+                          key={`${skill.title}-${index}`}
+                          className={styles.techSkillCard}
+                          style={{ ["--card-tint" as any]: tint }}
+                        >
+                          <div className={styles.techSkillIcon} style={{ color: tint }}>
+                            <Icon name={skill.icon || "grid"} size="m" />
+                          </div>
+                          <h3>{skill.title}</h3>
+                          <p>{skill.description}</p>
+                        </div>
+                      );
+                    },
+                  )}
+                </div>
+
+                {about.technical.categories && about.technical.categories.length > 0 && (
+                  <div className={styles.categories}>
+                    {about.technical.categories.map(
+                      (category: { title: string; items: string[] }, index: number) => (
+                        <div key={`${category.title}-${index}`} className={styles.category}>
+                          <p className={styles.categoryTitle}>
+                            {category.title}
+                            <span>{category.items.length}</span>
+                          </p>
+                          <SkillGrid items={category.items} />
+                        </div>
+                      ),
+                    )}
+                  </div>
+                )}
+              </section>
+            </ScrollReveal>
+          )}
+
+          {/* 05 — Repository skills */}
+          {about.repoSkills?.display && (
+            <ScrollReveal direction="up">
+              <section
+                id="repositories"
+                className={styles.section}
+                style={{ ["--accent" as string]: ACCENT.repos } as React.CSSProperties}
+              >
+                <SectionHead
+                  index={num("repositories")}
+                  icon="github"
+                  title={about.repoSkills.title}
+                  subtitle="GitHub"
+                  accent={ACCENT.repos}
+                />
+                <p className={styles.sectionLead}>{about.repoSkills.description}</p>
+                <div className={styles.repoSkillGrid}>
+                  {about.repoSkills.repos.map((repo: { name: string; url?: string; skills: string[] }) => (
+                    <a
+                      key={repo.name}
+                      href={repo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.repoSkillCard}
+                    >
+                      <span className={styles.repoHead}>
+                        <Icon name="github" size="s" />
+                        <span className={styles.repoName}>{repo.name}</span>
+                        <Icon name="arrowUpRightFromSquare" size="xs" />
+                      </span>
+                      <span className={styles.repoTags}>
+                        {repo.skills.map((skill: string) => (
+                          <span key={skill} className={styles.repoTag}>
+                            {skill}
+                          </span>
+                        ))}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            </ScrollReveal>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

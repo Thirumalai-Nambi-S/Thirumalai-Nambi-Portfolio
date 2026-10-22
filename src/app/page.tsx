@@ -2,12 +2,12 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Heading, Flex, Text, Avatar, RevealFx, Column, AnimatedCounter, ScrollReveal } from "@/once-ui/components";
-import { Panel } from "@/components/Panel";
-import { MiniGamesSection } from "@/components/minigames/MiniGamesSection";
+import { Column, AnimatedCounter, ScrollReveal } from "@/once-ui/components";
+import { GamesLauncher } from "@/components/minigames/GamesLauncher";
+import { HeroTyping } from "@/components/home/HeroTyping";
 
 import { baseURL } from "@/app/resources";
-import { home, about, person, newsletter } from "@/app/resources/content";
+import { home, person, newsletter } from "@/app/resources/content";
 import { Mailchimp } from "@/components";
 import styles from "./home.module.scss";
 
@@ -42,13 +42,7 @@ export async function generateMetadata() {
 
 export default function Home() {
   return (
-    <Column
-      maxWidth="xl"
-      gap="xl"
-      horizontal="center"
-      fillWidth
-      style={{ margin: "0 auto" }}
-    >
+    <Column fillWidth horizontal="center" gap="xl" className={styles.page}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -71,104 +65,91 @@ export default function Home() {
           }),
         }}
       />
-      <Panel accent="cyan" noPadding>
-        <Column fillWidth paddingY="l" gap="m" className={styles.hero}>
-        <Flex fillWidth className={styles.heroRow} gap="40">
-          <Column maxWidth="s" className={styles.heroCopy}>
-            <RevealFx translateY="4" fillWidth horizontal="start" paddingBottom="s">
-              <Heading wrap="balance" variant="display-strong-m" align="left">
-                {home.headline}
-              </Heading>
-            </RevealFx>
-            <RevealFx translateY="8" delay={0.2} fillWidth horizontal="start" paddingBottom="s">
-              <Text wrap="balance" onBackground="neutral-weak" variant="body-default-l" align="left">
-                {home.subline}
-              </Text>
-            </RevealFx>
-            <RevealFx translateY="12" delay={0.4} horizontal="start">
-              <div className={styles.ctaGrid}>
-                <Link href="/about" className={`${styles.ctaButton} ${styles.ctaSecondary}`}>
-                  {about.avatar.display && (
-                    <Avatar src={person.avatar} size="m" priority className={styles.ctaAvatar} />
-                  )}
-                  <span>{about.title}</span>
-                  <span className={styles.ctaArrow}>↗</span>
-                </Link>
 
-                <Link href="/project" className={`${styles.ctaButton} ${styles.ctaPrimary}`}>
-                  <span>View projects</span>
-                  <span className={styles.ctaArrow}>▶</span>
-                </Link>
+      {/* ───────── HERO ───────── */}
+      <section className={styles.hero} aria-labelledby="hero-name">
+        <div className={styles.heroGrid}>
+          <div className={styles.copy}>
+            <p className={`${styles.hello} ${styles.rise}`} style={{ "--d": "0ms" } as React.CSSProperties}>
+              Hello, I&apos;m
+            </p>
+            <h1
+              id="hero-name"
+              className={`${styles.name} ${styles.rise}`}
+              style={{ "--d": "90ms" } as React.CSSProperties}
+            >
+              <span className={styles.nameGradient}>{person.name.trim()} S</span>
+            </h1>
+            <p className={`${styles.role} ${styles.rise}`} style={{ "--d": "180ms" } as React.CSSProperties}>
+              AI/ML Engineer <i aria-hidden="true">·</i> Data Scientist <i aria-hidden="true">·</i> Full-Stack
+              Developer
+            </p>
+            <p className={`${styles.bio} ${styles.rise}`} style={{ "--d": "270ms" } as React.CSSProperties}>
+              Final-year B.Tech AI &amp; Data Science undergraduate who builds machine learning models, NLP and
+              computer-vision pipelines, and full-stack products. Currently seeking full-time opportunities as an
+              AI/ML Engineer, Data Scientist, or Full-Stack Developer.
+            </p>
 
-                <a
-                  href={person.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.ctaButton} ${styles.ctaSecondary}`}
-                >
-                  <span>Resume</span>
-                  <span className={styles.ctaArrow}>↗</span>
-                </a>
-
-                <Link href="/gallery" className={`${styles.ctaButton} ${styles.ctaTertiary}`}>
-                  <span>Achievements</span>
-                  <span className={styles.ctaArrow}>→</span>
-                </Link>
-              </div>
-            </RevealFx>
-            <RevealFx translateY="16" delay={0.55} fillWidth>
-              <Flex className={styles.stats} gap="12" wrap horizontal="start">
-                <div>
-                  <strong>
-                    <AnimatedCounter value={18} prefix="+" suffix="%" />
-                  </strong>
-                  <span>marketing ROI driven by data</span>
-                </div>
-                <div>
-                  <strong>
-                    <AnimatedCounter value={25} prefix="+" suffix="%" />
-                  </strong>
-                  <span>faster decision-making</span>
-                </div>
-                <div>
-                  <strong>
-                    <AnimatedCounter value={-35} suffix="%" />
-                  </strong>
-                  <span>task time via AI tooling</span>
-                </div>
-              </Flex>
-            </RevealFx>
-          </Column>
-          <RevealFx
-            fillWidth={false}
-            translateY="12"
-            delay={0.3}
-            className={styles.heroPortrait}
-          >
-            <div className={styles.portraitShape}>
-              <Image
-                src={person.heroAvatar}
-                alt={person.name}
-                fill
-                sizes="440px"
-                priority
-                style={{ objectFit: "contain", objectPosition: "center bottom" }}
-              />
-              <span className={styles.portraitCorner} data-corner="tl" />
-              <span className={styles.portraitCorner} data-corner="br" />
+            <div className={`${styles.actions} ${styles.rise}`} style={{ "--d": "360ms" } as React.CSSProperties}>
+              <a href={person.resume} download className={`${styles.btn} ${styles.btnPrimary}`}>
+                Download Resume
+              </a>
+              <Link href="/project" className={`${styles.btn} ${styles.btnGhost}`}>
+                View Projects
+              </Link>
             </div>
-          </RevealFx>
-        </Flex>
-        </Column>
-      </Panel>
-      <ScrollReveal direction="up" threshold={0.05}>
-        <MiniGamesSection />
-      </ScrollReveal>
+
+            <div className={styles.rise} style={{ "--d": "450ms" } as React.CSSProperties}>
+              <HeroTyping />
+            </div>
+          </div>
+
+          <div className={`${styles.photoCol} ${styles.rise}`} style={{ "--d": "200ms" } as React.CSSProperties}>
+            <div className={styles.photoWrap}>
+              <span className={styles.photoGlow} aria-hidden="true" />
+              <span className={styles.photoRing} aria-hidden="true" />
+              <div className={styles.photo}>
+                <Image
+                  src={person.heroAvatar}
+                  alt={person.name.trim()}
+                  width={1019}
+                  height={1510}
+                  priority
+                  sizes="(max-width: 860px) 320px, 480px"
+                  className={styles.photoImg}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul className={`${styles.stats} ${styles.rise}`} style={{ "--d": "560ms" } as React.CSSProperties}>
+          <li>
+            <strong>
+              <AnimatedCounter value={18} prefix="+" suffix="%" />
+            </strong>
+            <span>marketing ROI driven by data</span>
+          </li>
+          <li>
+            <strong>
+              <AnimatedCounter value={25} prefix="+" suffix="%" />
+            </strong>
+            <span>faster decision-making</span>
+          </li>
+          <li>
+            <strong>
+              <AnimatedCounter value={-35} suffix="%" />
+            </strong>
+            <span>task time via AI tooling</span>
+          </li>
+        </ul>
+      </section>
+
+      <GamesLauncher />
+
       {newsletter.display && (
         <ScrollReveal direction="scale" delay={0.05} threshold={0.05}>
-          <Panel accent="orange" noPadding>
-            <Mailchimp newsletter={newsletter} />
-          </Panel>
+          <Mailchimp newsletter={newsletter} />
         </ScrollReveal>
       )}
     </Column>

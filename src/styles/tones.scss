@@ -1,0 +1,54 @@
+/*
+  Page tones — one muted, translucent hue (or a mix of two) per page.
+  Colours are deliberately desaturated and dark so the frosted glass reads
+  as soft and elegant rather than neon. They are registered as typed
+  properties so the whole site cross-fades when you navigate.
+*/
+@property --tone-a { syntax: "<color>"; inherits: true; initial-value: #2fa7b8; }
+@property --tone-b { syntax: "<color>"; inherits: true; initial-value: #2a79ad; }
+@property --tone-c { syntax: "<color>"; inherits: true; initial-value: #0c3446; }
+
+html {
+  --tone-a: #2fa7b8;
+  --tone-b: #2a79ad;
+  --tone-c: #0c3446;
+  --spot-rgb: 47, 167, 184;
+  transition: --tone-a 1.1s ease, --tone-b 1.1s ease, --tone-c 1.1s ease;
+}
+
+html[data-tone="cyan"] {
+  --tone-a: #2fa7b8;
+  --tone-b: #2a79ad;
+  --tone-c: #0c3446;
+  --spot-rgb: 47, 167, 184;
+}
+html[data-tone="emerald"] {
+  --tone-a: #2fa882;
+  --tone-b: #1f8c6c;
+  --tone-c: #0b3629;
+  --spot-rgb: 47, 168, 130;
+}
+html[data-tone="blood"] {
+  --tone-a: #b8404e;
+  --tone-b: #8a2335;
+  --tone-c: #3d0d16;
+  --spot-rgb: 184, 64, 78;
+}
+html[data-tone="teal"] {
+  --tone-a: #2ba99c;
+  --tone-b: #2a83b0;
+  --tone-c: #0c3a42;
+  --spot-rgb: 43, 169, 156;
+}
+html[data-tone="bloodcyan"] {
+  --tone-a: #b8404e;
+  --tone-b: #2799ab;
+  --tone-c: #2a1026;
+  --spot-rgb: 184, 64, 78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}

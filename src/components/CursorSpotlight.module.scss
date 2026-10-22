@@ -22,15 +22,16 @@
   margin-left: -750px;
   margin-top: -750px;
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: var(--spot-opacity, 0.7);
+  mix-blend-mode: screen;
   transition: opacity 0.6s ease, border-radius 0.4s ease;
   will-change: transform;
   background: radial-gradient(
     circle,
-    rgba(var(--user-cursor-rgb, 56, 224, 255), 0.5) 5%,
-    rgba(var(--user-cursor-rgb, 34, 211, 238), 0.28) 24%,
-    rgba(var(--user-cursor-rgb, 20, 160, 200), 0.14) 45%,
-    rgba(var(--user-cursor-rgb, 10, 90, 130), 0.05) 62%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.5) 5%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.28) 24%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.14) 45%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.05) 62%,
     transparent 75%
   );
   filter: blur(14px);
@@ -54,8 +55,8 @@
     circle,
     transparent 0%,
     transparent 28%,
-    rgba(var(--user-cursor-rgb, 56, 224, 255), 0.55) 36%,
-    rgba(var(--user-cursor-rgb, 34, 211, 238), 0.22) 46%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.55) 36%,
+    rgba(var(--user-cursor-rgb, var(--spot-rgb)), 0.22) 46%,
     transparent 62%
   );
 }
@@ -127,4 +128,16 @@
   //   margin-left: -180px;
   //   margin-top: -180px;
   // }
+}
+
+
+/* ---------- Intensity (set via data-spot on <html>) ---------- */
+:global(html[data-spot="soft"]) .glowOuter {
+  --spot-opacity: 0.45;
+}
+:global(html[data-spot="balanced"]) .glowOuter {
+  --spot-opacity: 0.7;
+}
+:global(html[data-spot="vivid"]) .glowOuter {
+  --spot-opacity: 0.95;
 }

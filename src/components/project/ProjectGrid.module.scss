@@ -1,3 +1,5 @@
+@use "../../styles/glass" as g;
+
 /* ---------- Row list (alternating video / details) ---------- */
 .list {
   width: 100%;
@@ -300,4 +302,16 @@
     opacity: 1;
     transform: none;
   }
+}
+
+
+/* Liquid Glass */
+.media {
+  @include g.glass(24px);
+  padding: 0;
+}
+.modal {
+  @include g.glass(28px);
+  background-color: rgba(14, 18, 44, 0.72);
+  border-color: rgba(255, 255, 255, 0.2);
 }

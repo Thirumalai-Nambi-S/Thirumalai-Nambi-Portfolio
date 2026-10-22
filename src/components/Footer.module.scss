@@ -1,3 +1,5 @@
+@use "../styles/glass" as g;
+
 @media (--s) {
     .mobile {
         text-align: center;
@@ -28,4 +30,11 @@
             transform: none;
         }
     }
+}
+
+/* Liquid Glass footer bar */
+.mobile {
+    @include g.glass(26px);
+    width: 100%;
+    padding-block: 12px !important;
 }

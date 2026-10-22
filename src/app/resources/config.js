@@ -17,13 +17,13 @@ const protectedRoutes = {
 
 const style = {
   theme: "dark", // dark | light
-  neutral: "gray", // sand | gray | slate
-  brand: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
+  neutral: "slate", // sand | gray | slate
+  brand: "blue", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   accent: "violet", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan
   solid: "contrast", // color | contrast
   solidStyle: "flat", // flat | plastic
   border: "playful", // rounded | playful | conservative
-  surface: "transparent", // filled | translucent | transparent
+  surface: "translucent", // filled | translucent | transparent
   transition: "all", // all | micro | macro
 };
 

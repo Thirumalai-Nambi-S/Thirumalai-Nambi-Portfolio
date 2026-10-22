@@ -1,3 +1,5 @@
+@use "../../styles/glass" as g;
+
 .grid {
   width: 100%;
   display: grid;
@@ -126,5 +128,15 @@
 
   .updated {
     margin-left: 0;
+  }
+}
+
+
+/* Liquid Glass */
+.card {
+  @include g.glass(22px);
+
+  &:hover {
+    @include g.glass-hover(color-mix(in srgb, var(--brand-solid-strong) 50%, transparent));
   }
 }

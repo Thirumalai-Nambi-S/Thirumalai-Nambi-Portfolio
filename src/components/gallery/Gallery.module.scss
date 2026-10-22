@@ -1,8 +1,11 @@
+@use "../../styles/glass" as g;
+
 .masonryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 18px;
-  width: min(92vw, 1180px);
+  width: 100%;
+  max-width: 1180px;
   margin: var(--static-space-40) auto;
 }
 
@@ -248,8 +251,9 @@
 
 @media (max-width: 760px) {
   .masonryGrid {
-    grid-template-columns: 1fr;
-    width: min(92vw, 420px);
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 420px;
   }
 
   .lightboxPanel {
@@ -264,4 +268,11 @@
       font-size: var(--font-size-heading-s);
     }
   }
+}
+
+
+/* Liquid Glass */
+.imageContainer {
+  @include g.glass(20px);
+  padding: 10px;
 }

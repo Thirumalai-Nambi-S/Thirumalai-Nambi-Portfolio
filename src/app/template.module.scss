@@ -1,6 +1,6 @@
 .pageTransition {
   width: 100%;
-  animation: pageEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: pageEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 @keyframes pageEnter {

@@ -44,6 +44,8 @@ export default TimeDisplay;
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
+  // On very small screens only the active route keeps its text label (see Header.module.scss)
+  const nav = (selected: boolean) => (selected ? styles.navBtnActive : styles.navBtn);
 
   return (
     <>
@@ -64,7 +66,7 @@ export const Header = () => {
           </Flex>
           <Flex horizontal="center">
             <Flex
-              className={styles.navScroll}
+              className={`${styles.navScroll} ${styles.navPill}`}
               background="surface"
               border="neutral-medium"
               radius="m-4"
@@ -74,13 +76,14 @@ export const Header = () => {
             >
               <Flex gap="4" vertical="center" textVariant="body-default-s">
                 {routes["/"] && (
-                  <ToggleButton prefixIcon="home" href="/" selected={pathname === "/"} />
+                  <ToggleButton prefixIcon="home" href="/" aria-label="Home" className={nav(pathname === "/")} selected={pathname === "/"} />
                 )}
                 <Line vert maxHeight="24" />
                 {routes["/about"] && (
                   <ToggleButton
                     prefixIcon="person"
                     href="/about"
+                    className={nav(pathname === "/about")}
                     label={about.label}
                     selected={pathname === "/about"}
                   />
@@ -89,6 +92,7 @@ export const Header = () => {
                   <ToggleButton
                     prefixIcon="play"
                     href="/project"
+                    className={nav(pathname.startsWith("/project"))}
                     label={project.label}
                     selected={pathname.startsWith("/project")}
                   />
@@ -97,6 +101,7 @@ export const Header = () => {
                   <ToggleButton
                     prefixIcon="grid"
                     href="/work"
+                    className={nav(pathname.startsWith("/work"))}
                     label={work.label}
                     selected={pathname.startsWith("/work")}
                   />
@@ -105,6 +110,7 @@ export const Header = () => {
                   <ToggleButton
                     prefixIcon="gallery"
                     href="/gallery"
+                    className={nav(pathname.startsWith("/gallery"))}
                     label={gallery.label}
                     selected={pathname.startsWith("/gallery")}
                   />
@@ -115,6 +121,7 @@ export const Header = () => {
                     <ToggleButton
                       prefixIcon="contact"
                       href="/contact"
+                      className={nav(pathname.startsWith("/contact"))}
                       label={contact.label}
                       selected={pathname.startsWith("/contact")}
                     />

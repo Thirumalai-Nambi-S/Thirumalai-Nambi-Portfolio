@@ -11,6 +11,9 @@ const nextConfig = {
 
   reactStrictMode: true,
 
+  // Hide the dev-only floating "N" badge so it never sits on top of the Games button.
+  devIndicators: false,
+
   // Allow the Next.js dev server (HMR) to be reached from these origins.
   // Prevents "Blocked cross-origin request" warnings/HMR failures when
   // accessing the dev server via 127.0.0.1, a LAN IP, etc.
