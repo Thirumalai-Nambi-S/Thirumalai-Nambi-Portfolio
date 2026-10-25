@@ -69,6 +69,12 @@
 
 @media (max-width: 560px) {
   .panelBody {
-    padding: 18px;
+    padding: 14px;
+  }
+}
+/* phones: the cards inside are glass panes already — don't double up the inset */
+@media (max-width: 420px) {
+  .panelBody {
+    padding: 6px;
   }
 }

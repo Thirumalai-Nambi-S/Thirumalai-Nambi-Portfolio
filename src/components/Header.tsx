@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, ToggleButton } from "@/once-ui/components";
 import styles from "@/components/Header.module.scss";
+import { MobileMenu } from "@/components/MobileMenu";
 
 import { routes, display } from "@/app/resources";
 import { person, home, about, work, project, contact, gallery } from "@/app/resources/content";
@@ -127,6 +128,11 @@ export const Header = () => {
                     />
                   </>
                 )}
+                {/* phones / small tablets only: hamburger for Games + Theme Studio */}
+                <span className={styles.menuWrap}>
+                  <Line vert maxHeight="24" />
+                  <MobileMenu />
+                </span>
               </Flex>
             </Flex>
           </Flex>

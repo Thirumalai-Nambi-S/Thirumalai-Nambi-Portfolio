@@ -8,6 +8,11 @@
 @property --tone-b { syntax: "<color>"; inherits: true; initial-value: #2a79ad; }
 @property --tone-c { syntax: "<color>"; inherits: true; initial-value: #0c3446; }
 
+/* Pointer-light plumbing: glass surfaces set --lg: 1; <PointerGlow /> writes --px/--py. */
+@property --lg { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --px { syntax: "<length>"; inherits: false; initial-value: -999px; }
+@property --py { syntax: "<length>"; inherits: false; initial-value: -999px; }
+
 html {
   --tone-a: #2fa7b8;
   --tone-b: #2a79ad;

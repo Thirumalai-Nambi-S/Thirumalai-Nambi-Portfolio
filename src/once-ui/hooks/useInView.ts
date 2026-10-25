@@ -29,19 +29,38 @@ export function useInView<T extends HTMLElement>(options?: IntersectionObserverI
       return;
     }
 
+    const reveal = () => {
+      setInView(true);
+      observer.disconnect();
+      window.removeEventListener("scroll", check);
+    };
+
+    // Safety net for fast flings and very tall blocks (common on phones, where a
+    // section can be several screens high): reveal anything that has reached the
+    // viewport, or that the user has already scrolled past.
+    const check = () => {
+      const rect = node.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92) reveal();
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
+        if (entry.isIntersecting) reveal();
       },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px", ...options }
+      // threshold is a *fraction of the element*, so keep it tiny — a 0.2 threshold on
+      // a section 6x taller than the screen could never be satisfied.
+      { threshold: 0.01, rootMargin: "0px 0px -8% 0px", ...options }
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
-  }, [options]);
+    window.addEventListener("scroll", check, { passive: true });
+    check();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", check);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options?.threshold, options?.rootMargin]);
 
   return { ref, inView } as const;
 }

@@ -25,3 +25,27 @@
     animation: none;
   }
 }
+
+/* Every page title eases in with a soft blur-to-sharp reveal. */
+@keyframes titleIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(12px);
+    letter-spacing: 0.03em;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+    letter-spacing: inherit;
+  }
+}
+.pageTransition :global(h1:not([aria-label])) {
+  animation: titleIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pageTransition :global(h1:not([aria-label])) {
+    animation: none;
+  }
+}

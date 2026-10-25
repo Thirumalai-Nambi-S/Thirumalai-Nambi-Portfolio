@@ -309,3 +309,10 @@
   background-color: rgba(24, 28, 64, 0.55);
   border-color: rgba(255, 255, 255, 0.24);
 }
+
+/* Mobile: Games moves into the hamburger menu of the bottom nav. */
+@media (max-width: 768px) {
+  .launcher {
+    display: none;
+  }
+}

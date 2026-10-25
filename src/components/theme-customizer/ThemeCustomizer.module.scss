@@ -502,3 +502,10 @@
     animation: none;
   }
 }
+
+/* Mobile: Theme Studio moves into the hamburger menu of the bottom nav. */
+@media (max-width: 768px) {
+  .fab {
+    display: none;
+  }
+}

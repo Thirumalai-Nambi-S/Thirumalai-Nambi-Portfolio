@@ -38,3 +38,11 @@
     width: 100%;
     padding-block: 12px !important;
 }
+
+
+/* keep the footer clear of the fixed bottom nav bar on phones / small tablets */
+@media (max-width: 768px) {
+    .mobile {
+        margin-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+}

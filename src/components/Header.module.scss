@@ -64,14 +64,40 @@
     }
 }
 
-/* Phones: keep the whole nav pill on screen — inactive items show icon only. */
+.menuWrap {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .menuWrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+}
+
+/* Phones: every route is icon-only so the whole pill — including the hamburger —
+   always fits on screen (the selected route keeps its underline marker). */
 @media (max-width: 560px) {
-    .navBtn :global(.font-label) {
+    .navBtn :global(.font-label),
+    .navBtnActive :global(.font-label) {
         display: none;
     }
 
-    .navBtn {
+    .navBtn,
+    .navBtnActive {
         padding-inline: var(--static-space-8) !important;
+    }
+}
+
+/* Very narrow phones (≤380px): tighten a little more. */
+@media (max-width: 380px) {
+    .navBtn,
+    .navBtnActive {
+        padding-inline: 6px !important;
+    }
+    .navPill {
+        padding: 3px !important;
     }
 }
 

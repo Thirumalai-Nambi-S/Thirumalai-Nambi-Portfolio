@@ -3,6 +3,8 @@ import "@/once-ui/tokens/index.scss";
 import "@/styles/tones.scss";
 import { TONES } from "@/app/resources/tones";
 import { PageTone } from "@/components/PageTone";
+import { PointerGlow } from "@/components/PointerGlow";
+import { GamesLauncher } from "@/components/minigames/GamesLauncher";
 
 import classNames from "classnames";
 
@@ -137,6 +139,8 @@ export default async function RootLayout({
       <ToastProvider>
         <ThemeCustomizerProvider>
         <PageTone />
+        <PointerGlow />
+        <GamesLauncher />
         <Column
           as="body"
           fillWidth
@@ -145,7 +149,7 @@ export default async function RootLayout({
           style={{
             minHeight: "100vh",
             width: "100%",
-            overflowX: "hidden",
+            overflowX: "clip",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -195,8 +199,8 @@ export default async function RootLayout({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                paddingLeft: "24px",
-                paddingRight: "24px",
+                paddingLeft: "clamp(12px, 3.4vw, 24px)",
+                paddingRight: "clamp(12px, 3.4vw, 24px)",
               }}
             >
               <RouteGuard>{children}</RouteGuard>

@@ -133,7 +133,7 @@ export default function About() {
                     <Icon name="location" size="xs" onBackground="accent-weak" />
                     <span>{person.city}</span>
                     <span className={styles.metaDot} aria-hidden="true">·</span>
-                    <span>{person.location}</span>
+                    <span className={styles.metaTz}>{person.location}</span>
                   </div>
 
                   {person.languages.length > 0 && (

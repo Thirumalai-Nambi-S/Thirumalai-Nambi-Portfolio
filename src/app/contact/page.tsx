@@ -1,7 +1,7 @@
-import { Avatar, Button, Column, Flex, Heading, Icon, ScrollReveal, Tag, Text } from "@/once-ui/components";
+import React from "react";
 import { baseURL } from "@/app/resources";
-import { person, contact, social } from "@/app/resources/content";
-import { Panel } from "@/components/Panel";
+import { person, contact } from "@/app/resources/content";
+import { ContactStage } from "./ContactStage";
 import styles from "./contact.module.scss";
 
 export async function generateMetadata() {
@@ -18,8 +18,10 @@ export async function generateMetadata() {
 }
 
 export default function Contact() {
+  const words = contact.title.split(" ");
+
   return (
-    <Column maxWidth="m" gap="xl" horizontal="center" paddingY="l" fillWidth style={{ margin: "0 auto" }}>
+    <div className={styles.wrap}>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -34,117 +36,40 @@ export default function Contact() {
         }}
       />
 
-      <ScrollReveal direction="up">
-      <Panel accent="cyan">
-        <Column fillWidth gap="16" horizontal="center" align="center">
-          <Tag size="m" variant="brand" label="Get in touch" />
-          <Heading as="h1" variant="display-strong-l" wrap="balance" align="center">
-            {contact.title}
-          </Heading>
-          <Text
-            variant="body-default-l"
-            onBackground="neutral-weak"
-            align="center"
-            style={{ maxWidth: "620px" }}
-          >
-            {contact.intro}
-          </Text>
-        </Column>
-      </Panel>
-      </ScrollReveal>
+      <header className={styles.hero}>
+        <p className={`${styles.badge} ${styles.enter}`}>
+          <span aria-hidden="true">✦</span> Get in touch
+        </p>
 
-      <ScrollReveal direction="left" delay={0.1}>
-      <Panel accent="violet" noPadding>
-        <div className={styles.grid}>
-        <Column className={styles.card} gap="20">
-          <Flex gap="16" vertical="center">
-            <Avatar src={person.avatar} size="l" priority />
-            <Column gap="4">
-              <Text variant="heading-strong-l">{person.name}</Text>
-              <Text variant="body-default-s" onBackground="neutral-weak">
-                {person.role}
-              </Text>
-            </Column>
-          </Flex>
-
-          <Text variant="body-default-s" onBackground="neutral-weak">
-            {contact.availability}
-          </Text>
-
-          <Flex gap="8" wrap>
-            {social
-              .filter((item) => item.link)
-              .map((item) => (
-                <Button
-                  key={item.name}
-                  href={item.link}
-                  variant="secondary"
-                  size="s"
-                  prefixIcon={item.icon}
-                  data-border="rounded"
-                >
-                  {item.name}
-                </Button>
-              ))}
-          </Flex>
-        </Column>
-
-        <Column className={styles.card} gap="16">
-          <Text variant="label-default-s" onBackground="neutral-weak" className={styles.eyebrow}>
-            Reach me directly
-          </Text>
-          <Column gap="4">
-            {contact.methods.map((method) => (
-              <a
-                key={method.label}
-                href={method.href}
-                className={styles.methodRow}
-                {...(!method.href && { style: { pointerEvents: "none", cursor: "default" } })}
+        <h1 className={styles.title} aria-label={contact.title}>
+          {words.map((w, i) => (
+            <React.Fragment key={`${w}-${i}`}>
+              <span
+                className={styles.word}
+                aria-hidden="true"
+                style={{ ["--w" as string]: `${0.1 + i * 0.09}s` } as React.CSSProperties}
               >
-                <span className={styles.methodIcon}>
-                  <Icon name={method.icon} size="s" onBackground="brand-medium" />
-                </span>
-                <span className={styles.methodText}>
-                  <Text variant="label-default-s" onBackground="neutral-weak">
-                    {method.label}
-                  </Text>
-                  <Text variant="body-default-m">{method.value}</Text>
-                </span>
-              </a>
-            ))}
-          </Column>
-
-          <Button href={`mailto:${person.email}`} variant="primary" size="m" fillWidth arrowIcon>
-            Send me an email
-          </Button>
-        </Column>
-        </div>
-      </Panel>
-      </ScrollReveal>
-
-      <ScrollReveal direction="up" delay={0.15}>
-      <Panel accent="orange">
-        <Column fillWidth gap="16" horizontal="center" align="center">
-        <Text variant="label-default-s" onBackground="neutral-weak" className={styles.eyebrow}>
-          Find me online
-        </Text>
-        <div className={styles.socialGrid}>
-          {contact.socials.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialCard}
-            >
-              <Icon name={item.icon} size="m" onBackground="neutral-weak" />
-              <Text variant="body-default-s">{item.label}</Text>
-            </a>
+                {w}
+              </span>
+              {i < words.length - 1 ? " " : null}
+            </React.Fragment>
           ))}
-        </div>
-        </Column>
-      </Panel>
-      </ScrollReveal>
-    </Column>
+        </h1>
+
+        <p className={`${styles.intro} ${styles.enter}`} style={{ ["--d" as string]: "0.3s" } as React.CSSProperties}>
+          {contact.intro}
+        </p>
+      </header>
+
+      <ContactStage
+        name={person.name.trim()}
+        role={person.role}
+        avatar={person.avatar}
+        availability={contact.availability}
+        email={person.email}
+        methods={contact.methods.map((m) => ({ label: m.label, value: m.value, href: m.href, icon: m.icon }))}
+        socials={contact.socials.map((s) => ({ label: s.label, href: s.href, icon: s.icon }))}
+      />
+    </div>
   );
 }

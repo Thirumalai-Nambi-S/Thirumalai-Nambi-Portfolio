@@ -2,9 +2,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Column, AnimatedCounter, ScrollReveal } from "@/once-ui/components";
-import { GamesLauncher } from "@/components/minigames/GamesLauncher";
+import { Column, AnimatedCounter } from "@/once-ui/components";
 import { HeroTyping } from "@/components/home/HeroTyping";
+import { HeroName } from "@/components/home/HeroName";
 
 import { baseURL } from "@/app/resources";
 import { home, person, newsletter } from "@/app/resources/content";
@@ -75,10 +75,11 @@ export default function Home() {
             </p>
             <h1
               id="hero-name"
+              aria-label={person.name.trim()}
               className={`${styles.name} ${styles.rise}`}
               style={{ "--d": "90ms" } as React.CSSProperties}
             >
-              <span className={styles.nameGradient}>{person.name.trim()} S</span>
+              <HeroName text={person.name.trim()} />
             </h1>
             <p className={`${styles.role} ${styles.rise}`} style={{ "--d": "180ms" } as React.CSSProperties}>
               AI/ML Engineer <i aria-hidden="true">·</i> Data Scientist <i aria-hidden="true">·</i> Full-Stack
@@ -145,12 +146,10 @@ export default function Home() {
         </ul>
       </section>
 
-      <GamesLauncher />
-
       {newsletter.display && (
-        <ScrollReveal direction="scale" delay={0.05} threshold={0.05}>
+        <div className={styles.newsletterWrap}>
           <Mailchimp newsletter={newsletter} />
-        </ScrollReveal>
+        </div>
       )}
     </Column>
   );

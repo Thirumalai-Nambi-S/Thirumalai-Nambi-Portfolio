@@ -1,6 +1,8 @@
 @use "../styles/glass" as g;
 
-/* Newsletter — a frosted glass card in the current page tone. */
+/* Newsletter — one title, one line, one button, and an envelope that opens
+   to release a letter. Same card footprint as before (full content column,
+   ≈460px tall on desktop), aligned with the hero and stats above it. */
 
 @property --nl-angle {
   syntax: "<angle>";
@@ -12,17 +14,15 @@
   @include g.glass(32px);
   position: relative;
   width: 100%;
-  max-width: 1160px;
-  margin: 0 auto;
+  min-height: 460px;
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   align-items: center;
-  gap: clamp(28px, 5vw, 64px);
+  gap: clamp(24px, 4vw, 56px);
   padding: clamp(26px, 4.5vw, 56px);
   overflow: hidden;
   isolation: isolate;
 
-  /* soft tone glow in the corner */
   &::before {
     content: "";
     position: absolute;
@@ -37,7 +37,28 @@
   }
 }
 
-/* slow-travelling highlight along the border */
+/* nothing animates until the card is on screen */
+.reveal {
+  opacity: 0;
+}
+.in .reveal {
+  /* `backwards` (not `both`) so hover transforms still work afterwards */
+  opacity: 1;
+  animation: nlUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes nlUp {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* travelling highlight along the border */
 .borderGlow {
   position: absolute;
   inset: 0;
@@ -69,6 +90,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   min-width: 0;
 }
 
@@ -87,124 +109,70 @@
   background: color-mix(in srgb, var(--tone-a) 16%, transparent);
   border: 1px solid color-mix(in srgb, var(--tone-a) 40%, transparent);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
-
-  span {
-    font-size: 0.7rem;
+}
+.badgeStar {
+  display: inline-block;
+  font-size: 0.7rem;
+  animation: starSpin 6s linear infinite;
+}
+@keyframes starSpin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
 .title {
-  margin: 0 0 14px;
-  font-size: clamp(1.7rem, 3.4vw, 2.5rem) !important;
+  margin: 0 0 16px;
+  font-size: clamp(1.8rem, 3.6vw, 2.7rem);
+  font-weight: 700;
   line-height: 1.12;
+  letter-spacing: -0.015em;
   text-align: left;
   text-wrap: balance;
 }
+.word {
+  display: inline-block;
+  opacity: 0;
+}
+.in .word {
+  opacity: 1;
+  animation: nlWord 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--w, 0s);
+}
+@keyframes nlWord {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(0.5em) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
 
 .desc {
-  margin: 0 0 28px;
-  max-width: 520px;
-  font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+  margin: 0 0 30px;
+  max-width: 500px;
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
   line-height: 1.7;
   color: var(--neutral-on-background-medium);
 }
 
-.topics {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-.topic {
-  @include g.glass-soft(16px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  padding: 11px 14px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--neutral-on-background-strong);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--tone-a) 55%, transparent);
-  }
-}
-.topicIcon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  color: color-mix(in srgb, var(--tone-a) 60%, #fff);
-  background: color-mix(in srgb, var(--tone-a) 18%, transparent);
-}
-
-/* ── ticket ── */
-.ticket {
-  @include g.glass-soft(26px);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: clamp(24px, 3vw, 36px) clamp(20px, 2.4vw, 32px);
-  text-align: center;
-  background-color: rgba(4, 6, 10, 0.35);
-
-}
-.ticketIcon {
-  display: grid;
-  place-items: center;
-  width: 60px;
-  height: 60px;
-  margin-bottom: 8px;
-  border-radius: 20px;
-  color: #fff;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 55%),
-    linear-gradient(135deg, var(--tone-a), var(--tone-b));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 14px 30px -12px color-mix(in srgb, var(--tone-a) 80%, transparent);
-  animation: nlFloat 5s ease-in-out infinite;
-}
-@keyframes nlFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-.ticketTitle {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--neutral-on-background-strong);
-}
-.ticketSub {
-  margin: 0 0 18px;
-  font-size: 0.86rem;
-  color: var(--neutral-on-background-weak);
-}
-
 .card a.cta {
+  --tx: 0px;
+  --ty: 0px;
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
-  min-height: 52px;
-  padding: 0 28px;
-  font-size: 1rem;
+  min-width: 230px;
+  min-height: 54px;
+  padding: 0 32px;
+  font-size: 1.02rem;
   font-weight: 700;
   color: #fff;
   text-decoration: none !important;
@@ -216,16 +184,43 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.32),
     0 14px 30px -14px color-mix(in srgb, var(--tone-a) 85%, transparent);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  transform: translate(var(--tx), var(--ty));
+  transition: transform 0.18s ease-out, box-shadow 0.3s ease;
 
+  /* light sweep */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+    transform: translateX(-120%);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
   &:hover {
-    transform: translateY(-3px);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.4),
       0 20px 38px -14px color-mix(in srgb, var(--tone-a) 95%, transparent);
   }
+  &:hover::after {
+    transform: translateX(120%);
+  }
   &:hover .arrow {
-    transform: translateX(4px);
+    transform: translateX(5px);
+  }
+}
+/* the button is also a .reveal element — its entrance must not fight the magnet transform */
+.in a.cta.reveal {
+  animation-name: nlUpCta;
+}
+@keyframes nlUpCta {
+  from {
+    opacity: 0;
+    translate: 0 26px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
   }
 }
 .arrow {
@@ -235,28 +230,343 @@
   transition: transform 0.3s ease;
 }
 
-.note {
-  margin: 12px 0 0;
-  font-size: 0.78rem;
-  color: var(--neutral-on-background-weak);
-  opacity: 0.85;
+/* ───────────────── Envelope visual ───────────────── */
+.visual {
+  --env-w: 176px;
+  --env-h: 120px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  opacity: 0;
+}
+.in .visual {
+  opacity: 1;
+  animation: visualIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+}
+@keyframes visualIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.halo {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tone-a) 42%, transparent), transparent);
+  filter: blur(16px);
+  animation: haloPulse 4.5s ease-in-out infinite;
+}
+@keyframes haloPulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.ringA,
+.ringB {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.ringA {
+  inset: 2%;
+  border: 1px dashed color-mix(in srgb, var(--tone-a) 45%, transparent);
+  animation: ringSpin 40s linear infinite;
+}
+.ringB {
+  inset: 15%;
+  border: 1px solid color-mix(in srgb, var(--tone-b) 38%, transparent);
+  animation: ringSpin 28s linear infinite reverse;
+}
+@keyframes ringSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* three dots orbiting the envelope */
+.orbit {
+  position: absolute;
+  animation: ringSpin 11s linear infinite;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--tone-a) 60%, #fff);
+    box-shadow: 0 0 14px var(--tone-a);
+  }
+}
+.orbit1 {
+  inset: 2%;
+}
+.orbit2 {
+  inset: 15%;
+  animation-duration: 8s;
+  animation-direction: reverse;
+  animation-delay: -3s;
+}
+.orbit3 {
+  inset: 24%;
+  animation-duration: 14s;
+  animation-delay: -6s;
+}
+
+/* envelope: 6s loop — flap opens, letter rises, sparkles burst, then it closes */
+.envelope {
+  position: relative;
+  width: var(--env-w);
+  height: var(--env-h);
+  perspective: 700px;
+  animation: envFloat 6s ease-in-out infinite;
+}
+@keyframes envFloat {
+  0%,
+  100% {
+    transform: translateY(6px) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+.envBack,
+.envFront,
+.letter,
+.flap {
+  position: absolute;
+  display: block;
+}
+.envBack {
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--tone-a) 80%, #000), color-mix(in srgb, var(--tone-b) 70%, #000));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 22px 44px -16px color-mix(in srgb, var(--tone-a) 80%, transparent);
+}
+.letter {
+  left: 9%;
+  right: 9%;
+  top: 8%;
+  height: 80%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 14%;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f6fbff, #d6e9f3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  animation: letterRise 6s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+
+  i {
+    display: block;
+    height: 6px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--tone-a) 55%, #9fb8c4);
+    opacity: 0.85;
+  }
+  i:nth-child(1) {
+    width: 55%;
+  }
+  i:nth-child(2) {
+    width: 100%;
+  }
+  i:nth-child(3) {
+    width: 78%;
+  }
+}
+@keyframes letterRise {
+  0%,
+  26% {
+    transform: translateY(0);
+  }
+  50%,
+  70% {
+    transform: translateY(-68%);
+  }
+  86%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.envFront {
+  inset: 0;
+  z-index: 2;
+  border-radius: 12px;
+  clip-path: polygon(0 100%, 0 24%, 50% 62%, 100% 24%, 100% 100%);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--tone-a) 92%, #fff 0%), color-mix(in srgb, var(--tone-b) 85%, #000));
+  filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.35));
+}
+
+.flap {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 62%;
+  z-index: 3;
+  transform-origin: 50% 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tone-a) 70%, #fff), color-mix(in srgb, var(--tone-a) 88%, #000));
+  animation: flapOpen 6s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+@keyframes flapOpen {
+  0%,
+  12% {
+    transform: rotateX(0deg);
+    z-index: 3;
+  }
+  17% {
+    z-index: 3;
+  }
+  17.1% {
+    z-index: 0;
+  }
+  26%,
+  80% {
+    transform: rotateX(180deg);
+    z-index: 0;
+  }
+  86% {
+    z-index: 0;
+  }
+  86.1% {
+    z-index: 3;
+  }
+  94%,
+  100% {
+    transform: rotateX(0deg);
+    z-index: 3;
+  }
+}
+
+/* sparkles released when the letter comes out */
+.star {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--tone-a) 50%, #fff);
+  text-shadow: 0 0 12px var(--tone-a);
+  opacity: 0;
+  animation: starBurst 6s ease-out infinite;
+  animation-delay: var(--sd, 0s);
+}
+.star1 {
+  --sx: -78px;
+  --sy: -96px;
+  --sd: 0s;
+}
+.star2 {
+  --sx: 70px;
+  --sy: -104px;
+  --sd: 0.12s;
+  font-size: 1.15rem;
+}
+.star3 {
+  --sx: -112px;
+  --sy: -34px;
+  --sd: 0.24s;
+  font-size: 0.7rem;
+}
+.star4 {
+  --sx: 112px;
+  --sy: -52px;
+  --sd: 0.36s;
+  font-size: 0.75rem;
+}
+.star5 {
+  --sx: 8px;
+  --sy: -128px;
+  --sd: 0.48s;
+  font-size: 1rem;
+}
+@keyframes starBurst {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  42% {
+    opacity: 1;
+  }
+  64% {
+    opacity: 0.9;
+    transform: translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) scale(1) rotate(90deg);
+  }
+  78%,
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--sx)), calc(-50% + var(--sy) - 14px)) scale(0.4) rotate(180deg);
+  }
 }
 
 /* ── responsive ── */
 @media (max-width: 860px) {
   .card {
     grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    gap: 8px;
+  }
+  .visual {
+    max-width: 260px;
+    --env-w: 150px;
+    --env-h: 102px;
   }
 }
 @media (max-width: 480px) {
-  .topics {
-    grid-template-columns: minmax(0, 1fr);
+  .card a.cta {
+    width: 100%;
+    min-width: 0;
   }
 }
 
+/* ── reduced motion: calm, static, fully visible ── */
 @media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .word,
+  .visual {
+    opacity: 1;
+    animation: none !important;
+  }
   .borderGlow,
-  .ticketIcon {
-    animation: none;
+  .badgeStar,
+  .halo,
+  .ringA,
+  .ringB,
+  .orbit,
+  .envelope,
+  .letter,
+  .flap,
+  .star {
+    animation: none !important;
+  }
+  .star {
+    display: none;
   }
 }

@@ -33,7 +33,7 @@ interface ScrollRevealProps extends React.HTMLAttributes<HTMLDivElement> {
 export function ScrollReveal({
   direction = "up",
   delay = 0,
-  threshold = 0.12,
+  threshold = 0.01,
   className,
   style,
   children,

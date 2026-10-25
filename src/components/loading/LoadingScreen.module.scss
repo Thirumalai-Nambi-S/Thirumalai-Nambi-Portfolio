@@ -14,7 +14,7 @@
   overflow: hidden;
   opacity: 1;
   transform: translate3d(0, 0, 0);
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: all;
   user-select: none;
@@ -77,7 +77,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: emblemPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: emblemPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 
@@ -151,7 +151,7 @@
   opacity: 0;
   transform: translate3d(0, -10px, 450px) scale(3.5);
   filter: blur(10px);
-  animation: zoomInLetter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: zoomInLetter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity, filter;
   background: linear-gradient(
     115deg,
@@ -198,8 +198,8 @@
   margin: 0 0 32px 0;
   opacity: 0;
   transform: translate3d(0, 12px, 0);
-  animation: fadeSubtitle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 1.4s;
+  animation: fadeSubtitle 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -234,8 +234,8 @@
   flex-direction: column;
   gap: 10px;
   opacity: 0;
-  animation: fadeInProgress 0.6s ease forwards;
-  animation-delay: 0.4s;
+  animation: fadeInProgress 0.4s ease forwards;
+  animation-delay: 0.1s;
 }
 
 @keyframes fadeInProgress {
@@ -267,7 +267,7 @@
   box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
   transform-origin: left center;
   transform: scaleX(0);
-  animation: fillProgressBar 3.2s cubic-bezier(0.25, 1, 0.35, 1) forwards;
+  animation: fillProgressBar 1.3s cubic-bezier(0.25, 1, 0.35, 1) forwards;
   will-change: transform;
 }
 

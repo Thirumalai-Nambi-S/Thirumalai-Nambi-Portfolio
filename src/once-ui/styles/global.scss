@@ -4,10 +4,16 @@
 }
 
 /* PREVENT HORIZONTAL SCROLL EVERYWHERE */
-html,
-body {
+html {
     max-width: 100%;
     overflow-x: hidden;
+}
+
+/* `clip` hides horizontal overflow WITHOUT turning <body> into a scroll
+   container — otherwise position: sticky (About sidebar) never sticks. */
+body {
+    max-width: 100%;
+    overflow-x: clip;
 }
 
 /* Keep the page scrollable, but never show a visible scrollbar track. */

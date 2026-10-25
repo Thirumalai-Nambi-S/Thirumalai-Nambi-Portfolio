@@ -18,7 +18,7 @@ export const LoadingScreen: React.FC = () => {
     document.documentElement.style.overflow = "hidden";
 
     const startTime = performance.now();
-    const duration = 3200; // 3.2s progress duration (extra 1 second of animation)
+    const duration = 1300; // short, snappy opening animation
 
     let rafId: number;
 
@@ -49,14 +49,14 @@ export const LoadingScreen: React.FC = () => {
         // Hold briefly at 100% then start cinematic exit
         const exitTimer = setTimeout(() => {
           setIsExiting(true);
-        }, 300);
+        }, 120);
 
         // Remove from DOM and restore scrolling
         const finishTimer = setTimeout(() => {
           setIsDone(true);
           document.body.style.overflow = prevBodyOverflow;
           document.documentElement.style.overflow = prevHtmlOverflow;
-        }, 800);
+        }, 560);
 
         return () => {
           clearTimeout(exitTimer);
@@ -112,7 +112,7 @@ export const LoadingScreen: React.FC = () => {
                 key={`fn-${index}`}
                 className={styles.letter}
                 style={{
-                  animationDelay: `${0.12 + index * 0.07}s`,
+                  animationDelay: `${0.04 + index * 0.035}s`,
                 }}
               >
                 {letter}
@@ -125,7 +125,7 @@ export const LoadingScreen: React.FC = () => {
                 key={`ln-${index}`}
                 className={styles.letter}
                 style={{
-                  animationDelay: `${0.12 + (firstName.length + index) * 0.07 + 0.08}s`,
+                  animationDelay: `${0.04 + (firstName.length + index) * 0.035 + 0.04}s`,
                 }}
               >
                 {letter}
